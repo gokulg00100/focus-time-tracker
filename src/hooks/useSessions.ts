@@ -1,10 +1,12 @@
 import { useState, useEffect, useCallback } from 'react'
 import { getAllSessions, saveSession, deleteSession, getSessionsByDate } from '../services/db'
+import { useAuthStore } from '../store/authStore'
 import type { FocusSession } from '../types'
 
 export function useSessions() {
   const [sessions, setSessions] = useState<FocusSession[]>([])
   const [loading, setLoading] = useState(true)
+  const uid = useAuthStore((s) => s.user?.uid)
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -16,9 +18,10 @@ export function useSessions() {
     }
   }, [])
 
+  // Reload whenever the logged-in user changes
   useEffect(() => {
     load()
-  }, [load])
+  }, [load, uid])
 
   const addSession = useCallback(
     async (session: FocusSession) => {
