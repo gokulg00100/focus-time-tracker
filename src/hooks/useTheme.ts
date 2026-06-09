@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useSettingsStore } from '../store/settingsStore'
-import { THEMES } from '../config/themes'
+import { THEMES, getTokens } from '../config/themes'
 
 export function useTheme() {
   const { settings, updateTheme, updateAccentTheme } = useSettingsStore()
@@ -49,6 +49,19 @@ export function useTheme() {
     document.body.style.background = isDark
       ? def.backgrounds.dark
       : def.backgrounds.light
+  }, [isDark, accentTheme])
+
+  // ── Semantic token CSS custom properties ─────────────────────────────────
+  // Exposes --clr-* vars for any CSS / Tailwind `[var(--clr-*)]` usage.
+  useEffect(() => {
+    const root = document.documentElement
+    const tok  = getTokens(THEMES[accentTheme], isDark)
+    root.style.setProperty('--clr-surface',          tok.surface)
+    root.style.setProperty('--clr-text-primary',     tok.textPrimary)
+    root.style.setProperty('--clr-text-secondary',   tok.textSecondary)
+    root.style.setProperty('--clr-timer-text',       tok.timerText)
+    root.style.setProperty('--clr-timer-ring',       tok.timerRing)
+    root.style.setProperty('--clr-timer-track',      tok.timerTrack)
   }, [isDark, accentTheme])
 
   const cycleTheme = () => {
