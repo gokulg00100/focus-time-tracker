@@ -10,7 +10,7 @@ import { useSessions } from '../hooks/useSessions'
 import { useTasks } from '../hooks/useTasks'
 import { requestNotificationPermission } from '../services/notifications'
 import { exportSessionsToCSV, exportToJSON, parseImportFile } from '../services/export'
-import { importData } from '../services/db'
+import { importData, clearAllUserData } from '../services/db'
 import type { AccentTheme } from '../types'
 import {
   Bell, Download, Upload, Trash2, Moon, Sun, Monitor, Target,
@@ -42,6 +42,9 @@ export function SettingsPage() {
   const { tasks } = useTasks()
   const [importStatus, setImportStatus] = useState<'idle' | 'success' | 'error'>('idle')
   const [showResetConfirm, setShowResetConfirm] = useState(false)
+  const [showClearDataConfirm, setShowClearDataConfirm] = useState(false)
+  const [clearConfirmText, setClearConfirmText] = useState('')
+  const [clearStatus, setClearStatus] = useState<'idle' | 'clearing' | 'done'>('idle')
 
   // Goals form state
   const [daily, setDaily] = useState(String(settings.goals.dailyMins))
@@ -84,6 +87,20 @@ export function SettingsPage() {
   const handleReset = () => {
     resetSettings()
     setShowResetConfirm(false)
+  }
+
+  const handleClearAllData = async () => {
+    setClearStatus('clearing')
+    try {
+      await clearAllUserData()
+      setClearStatus('done')
+      // Brief pause so the user sees "Cleared!" then hard-reload to
+      // flush all in-memory React state (sessions, tasks, stats).
+      setTimeout(() => window.location.reload(), 1200)
+    } catch {
+      setClearStatus('idle')
+      setShowClearDataConfirm(false)
+    }
   }
 
   return (
@@ -259,29 +276,138 @@ export function SettingsPage() {
           )}
         </Card>
 
-        {/* Danger zone */}
+        {/* Danger zone — reset settings */}
         <Card className="border-red-200 dark:border-red-900/50">
           <div className="flex items-center gap-2 mb-3">
             <Trash2 size={18} className="text-red-500" />
             <h3 className="font-semibold text-slate-900 dark:text-white">Reset Settings</h3>
           </div>
           <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">
-            Reset all settings to defaults. Your session data will not be affected.
+            Restore all preferences (theme, goals, notifications) to their defaults.
+            Your session history and tasks are not affected.
           </p>
           <Button variant="danger" size="sm" onClick={() => setShowResetConfirm(true)}>
             Reset to Defaults
           </Button>
         </Card>
+
+        {/* Danger zone — clear all data */}
+        <Card className="border-red-300 dark:border-red-800/60 bg-red-50/40 dark:bg-red-950/20">
+          <div className="flex items-center gap-2 mb-3">
+            <Trash2 size={18} className="text-red-600" />
+            <h3 className="font-semibold text-red-700 dark:text-red-400">Clear All Data</h3>
+          </div>
+          <p className="text-sm text-slate-600 dark:text-slate-400 mb-1">
+            Permanently delete <strong className="text-slate-800 dark:text-slate-200">all focus sessions</strong> and{' '}
+            <strong className="text-slate-800 dark:text-slate-200">all tasks</strong> from your local database.
+          </p>
+          <p className="text-xs text-slate-500 dark:text-slate-500 mb-4">
+            Your account and preferences are not affected. This cannot be undone.
+          </p>
+          <div className="flex items-center gap-3">
+            <Button
+              variant="danger"
+              size="sm"
+              onClick={() => { setClearConfirmText(''); setShowClearDataConfirm(true) }}
+            >
+              <Trash2 size={14} />
+              Clear All Data
+            </Button>
+            <span className="text-xs text-slate-400 dark:text-slate-500">
+              {sessions.length} session{sessions.length !== 1 ? 's' : ''} · {tasks.length} task{tasks.length !== 1 ? 's' : ''}
+            </span>
+          </div>
+        </Card>
       </div>
 
+      {/* Modal — reset settings */}
       <Modal open={showResetConfirm} onClose={() => setShowResetConfirm(false)} title="Reset Settings?" size="sm">
         <p className="text-sm text-slate-600 dark:text-slate-400 mb-5">
-          This will reset all settings to their defaults. Your session history and tasks will be preserved.
+          This will restore all preferences to defaults. Your session history and tasks will be preserved.
         </p>
         <div className="flex gap-3 justify-end">
           <Button variant="secondary" onClick={() => setShowResetConfirm(false)}>Cancel</Button>
           <Button variant="danger" onClick={handleReset}>Reset Settings</Button>
         </div>
+      </Modal>
+
+      {/* Modal — clear all data */}
+      <Modal
+        open={showClearDataConfirm}
+        onClose={() => { if (clearStatus !== 'clearing') setShowClearDataConfirm(false) }}
+        title="Clear All Data?"
+        size="sm"
+      >
+        {clearStatus === 'done' ? (
+          <div className="flex flex-col items-center gap-3 py-4">
+            <div className="w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center">
+              <CheckCircle size={24} className="text-emerald-500" />
+            </div>
+            <p className="text-sm font-medium text-slate-700 dark:text-slate-300">
+              All data cleared. Reloading…
+            </p>
+          </div>
+        ) : (
+          <>
+            {/* What gets deleted */}
+            <div className="rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800/50 p-4 mb-4">
+              <p className="text-xs font-semibold text-red-600 dark:text-red-400 uppercase tracking-wide mb-2">
+                Will be permanently deleted
+              </p>
+              <ul className="space-y-1.5 text-sm text-slate-700 dark:text-slate-300">
+                <li className="flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-red-500 flex-shrink-0"/>
+                  All <strong>{sessions.length}</strong> focus session{sessions.length !== 1 ? 's' : ''} &amp; statistics
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-red-500 flex-shrink-0"/>
+                  All <strong>{tasks.length}</strong> task{tasks.length !== 1 ? 's' : ''}
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-red-500 flex-shrink-0"/>
+                  Streaks, daily &amp; weekly history
+                </li>
+              </ul>
+              <p className="text-xs text-emerald-600 dark:text-emerald-400 mt-3 font-medium">
+                ✓ Your account and preferences are kept.
+              </p>
+            </div>
+
+            {/* Typed confirmation */}
+            <p className="text-sm text-slate-600 dark:text-slate-400 mb-2">
+              Type <strong className="text-red-500 font-mono">DELETE</strong> to confirm:
+            </p>
+            <input
+              type="text"
+              value={clearConfirmText}
+              onChange={(e) => setClearConfirmText(e.target.value)}
+              placeholder="DELETE"
+              className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-mono mb-5 focus:outline-none focus:ring-2 focus:ring-red-400"
+              autoComplete="off"
+            />
+
+            <div className="flex gap-3 justify-end">
+              <Button
+                variant="secondary"
+                onClick={() => setShowClearDataConfirm(false)}
+                disabled={clearStatus === 'clearing'}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="danger"
+                onClick={handleClearAllData}
+                disabled={clearConfirmText !== 'DELETE' || clearStatus === 'clearing'}
+              >
+                {clearStatus === 'clearing' ? (
+                  <><span className="animate-spin inline-block w-3 h-3 border-2 border-white/50 border-t-white rounded-full"/> Clearing…</>
+                ) : (
+                  <><Trash2 size={14}/> Clear All Data</>
+                )}
+              </Button>
+            </div>
+          </>
+        )}
       </Modal>
     </div>
   )

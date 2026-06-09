@@ -103,6 +103,15 @@ export async function saveSettings(settings: UserSettings): Promise<void> {
   await db.put('settings', { key: 'user-settings', value: settings })
 }
 
+// Clear all user data (sessions + tasks). Settings / preferences are kept.
+export async function clearAllUserData(): Promise<void> {
+  const db = await getDB()
+  const tx = db.transaction(['sessions', 'tasks'], 'readwrite')
+  await tx.objectStore('sessions').clear()
+  await tx.objectStore('tasks').clear()
+  await tx.done
+}
+
 // Export / Import
 export async function exportAllData(): Promise<{
   sessions: FocusSession[]
