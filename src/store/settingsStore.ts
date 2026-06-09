@@ -13,7 +13,7 @@ const DEFAULT_SETTINGS: UserSettings = {
     weeklyMins: 600,
     monthlyMins: 2400,
   },
-  theme: 'system',
+  theme: 'light',
   accentTheme: 'classic',
   notificationsEnabled: true,
   soundEnabled: true,

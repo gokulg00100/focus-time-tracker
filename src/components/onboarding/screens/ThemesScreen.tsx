@@ -1,107 +1,81 @@
-import { Check } from 'lucide-react'
+import { Sun, Moon } from 'lucide-react'
 import { useSettingsStore } from '../../../store/settingsStore'
+import { ThemePreviewCard } from '../../ui/ThemePreviewCard'
 import type { AccentTheme } from '../../../types'
 
-interface ThemeOption {
-  id: AccentTheme
-  name: string
-  emoji: string
-  description: string
-  /** Preview swatch — hardcoded hex since CSS vars aren't resolved in JS */
-  swatchColor: string
-  swatchBg: string
-}
-
-const THEMES: ThemeOption[] = [
-  {
-    id: 'classic',
-    name: 'Classic',
-    emoji: '⚡',
-    description: 'Clean, minimal, timeless',
-    swatchColor: '#6366f1',
-    swatchBg: '#1e1b4b',
-  },
-  {
-    id: 'f1',
-    name: 'F1 Racing',
-    emoji: '🏎️',
-    description: 'High performance energy',
-    swatchColor: '#e10600',
-    swatchBg: '#4a0000',
-  },
-  {
-    id: 'fifa',
-    name: 'World Cup',
-    emoji: '⚽',
-    description: 'Champions mindset',
-    swatchColor: '#22c55e',
-    swatchBg: '#052e16',
-  },
+const THEMES: { id: AccentTheme; label: string; emoji: string }[] = [
+  { id: 'classic', label: 'Classic',   emoji: '⚡' },
+  { id: 'f1',      label: 'F1 Racing', emoji: '🏎️' },
+  { id: 'fifa',    label: 'World Cup', emoji: '⚽' },
 ]
 
 export function ThemesScreen() {
-  const { settings, updateAccentTheme } = useSettingsStore()
-  const selected: AccentTheme = settings.accentTheme ?? 'classic'
+  const { settings, updateTheme, updateAccentTheme } = useSettingsStore()
+  const isDark   = settings.theme === 'dark'
+  const selected = settings.accentTheme ?? 'classic'
 
   return (
     <div className="flex flex-col items-center px-6 py-8">
-      <h2 className="text-3xl font-bold text-white text-center mb-2">
-        Choose Your Style
+
+      <h2 className="text-3xl font-bold text-slate-900 dark:text-white text-center mb-2">
+        Make It Yours
       </h2>
-      <p className="text-slate-400 text-center mb-8 max-w-xs">
-        Pick a theme that matches your energy. It applies instantly across the whole app.
+      <p className="text-slate-500 dark:text-slate-400 text-center mb-8 max-w-xs leading-relaxed">
+        Choose your look and feel — changes apply instantly and you can tweak them anytime.
       </p>
 
-      <div className="space-y-3 w-full max-w-sm">
-        {THEMES.map((theme) => {
-          const isSelected = selected === theme.id
-          return (
-            <button
-              key={theme.id}
-              onClick={() => updateAccentTheme(theme.id)}
-              className={[
-                'w-full flex items-center gap-4 p-4 rounded-2xl border text-left',
-                'transition-all duration-200',
-                isSelected
-                  ? 'border-primary-500 bg-primary-500/10 shadow-glow'
-                  : 'border-slate-700/50 bg-slate-800/40 hover:border-slate-600 hover:bg-slate-800/60',
-              ].join(' ')}
-            >
-              {/* Colour swatch */}
-              <div
-                className="w-12 h-12 rounded-xl flex-shrink-0 flex items-center justify-center"
-                style={{ backgroundColor: theme.swatchBg }}
+      {/* ── Light / Dark toggle ─────────────────────────────────────────── */}
+      <div className="mb-7 w-full max-w-sm">
+        <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-3">
+          Colour mode
+        </p>
+        <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800 rounded-2xl p-1.5">
+          {[
+            { mode: 'light' as const, icon: Sun,  label: 'Light' },
+            { mode: 'dark'  as const, icon: Moon, label: 'Dark'  },
+          ].map(({ mode, icon: Icon, label }) => {
+            const active = settings.theme === mode
+            return (
+              <button
+                key={mode}
+                onClick={() => updateTheme(mode)}
+                className={[
+                  'flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium transition-all duration-200',
+                  active
+                    ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
+                    : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300',
+                ].join(' ')}
               >
-                <div
-                  className="w-6 h-6 rounded-lg"
-                  style={{ backgroundColor: theme.swatchColor }}
-                />
-              </div>
-
-              {/* Label */}
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  <span className="text-white font-semibold text-sm">{theme.name}</span>
-                  <span>{theme.emoji}</span>
-                </div>
-                <p className="text-slate-400 text-xs mt-0.5">{theme.description}</p>
-              </div>
-
-              {/* Selection indicator */}
-              {isSelected ? (
-                <div className="w-6 h-6 rounded-full bg-primary-500 flex items-center justify-center flex-shrink-0">
-                  <Check className="w-3 h-3 text-white" />
-                </div>
-              ) : (
-                <div className="w-6 h-6 rounded-full border border-slate-600 flex-shrink-0" />
-              )}
-            </button>
-          )
-        })}
+                <Icon className="w-4 h-4" />
+                {label}
+              </button>
+            )
+          })}
+        </div>
       </div>
 
-      <p className="text-slate-600 text-xs text-center mt-6">
-        You can change this anytime in Settings
+      {/* ── Accent colour ───────────────────────────────────────────────── */}
+      <div className="w-full max-w-sm">
+        <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-3">
+          Accent colour
+        </p>
+        <div className="grid grid-cols-3 gap-3">
+          {THEMES.map((t) => (
+            <ThemePreviewCard
+              key={t.id}
+              id={t.id}
+              label={t.label}
+              emoji={t.emoji}
+              isDark={isDark}
+              isSelected={selected === t.id}
+              onClick={() => updateAccentTheme(t.id)}
+            />
+          ))}
+        </div>
+      </div>
+
+      <p className="text-slate-400 dark:text-slate-600 text-xs text-center mt-6">
+        All settings can be changed later in Settings&nbsp;→&nbsp;Appearance
       </p>
     </div>
   )

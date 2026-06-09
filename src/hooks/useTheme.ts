@@ -1,39 +1,36 @@
-import { useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useSettingsStore } from '../store/settingsStore'
 
 export function useTheme() {
   const { settings, updateTheme, updateAccentTheme } = useSettingsStore()
   const { theme, accentTheme = 'classic' } = settings
 
-  // ── Dark / light mode ────────────────────────────────────────────────────
+  // Track system dark-mode preference reactively
+  const [systemDark, setSystemDark] = useState(
+    () => window.matchMedia('(prefers-color-scheme: dark)').matches
+  )
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-color-scheme: dark)')
+    const handler = (e: MediaQueryListEvent) => setSystemDark(e.matches)
+    mq.addEventListener('change', handler)
+    return () => mq.removeEventListener('change', handler)
+  }, [])
+
+  const isDark = theme === 'dark' || (theme === 'system' && systemDark)
+
+  // ── Apply dark / light class ─────────────────────────────────────────────
   useEffect(() => {
     const root = document.documentElement
-    const applyDark = (isDark: boolean) => {
-      if (isDark) root.classList.add('dark')
-      else root.classList.remove('dark')
-    }
+    if (isDark) root.classList.add('dark')
+    else root.classList.remove('dark')
+  }, [isDark])
 
-    if (theme === 'dark') {
-      applyDark(true)
-    } else if (theme === 'light') {
-      applyDark(false)
-    } else {
-      // system
-      const mq = window.matchMedia('(prefers-color-scheme: dark)')
-      applyDark(mq.matches)
-      const handler = (e: MediaQueryListEvent) => applyDark(e.matches)
-      mq.addEventListener('change', handler)
-      return () => mq.removeEventListener('change', handler)
-    }
-  }, [theme])
-
-  // ── Accent theme (CSS variable swap via class on <html>) ─────────────────
+  // ── Apply accent theme class ─────────────────────────────────────────────
   useEffect(() => {
     const root = document.documentElement
     root.classList.remove('theme-f1', 'theme-fifa')
-    if (accentTheme === 'f1') root.classList.add('theme-f1')
-    else if (accentTheme === 'fifa') root.classList.add('theme-fifa')
-    // 'classic' → no extra class; uses :root defaults
+    if (accentTheme === 'f1')   root.classList.add('theme-f1')
+    if (accentTheme === 'fifa') root.classList.add('theme-fifa')
   }, [accentTheme])
 
   const cycleTheme = () => {
@@ -42,5 +39,5 @@ export function useTheme() {
     else updateTheme('light')
   }
 
-  return { theme, accentTheme, updateTheme, updateAccentTheme, cycleTheme }
+  return { theme, accentTheme, isDark, updateTheme, updateAccentTheme, cycleTheme }
 }

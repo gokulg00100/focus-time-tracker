@@ -4,7 +4,7 @@ import { Card } from '../components/ui/Card'
 import { Button } from '../components/ui/Button'
 import { Input } from '../components/ui/Input'
 import { Modal } from '../components/ui/Modal'
-import { ThemeToggle } from '../components/ui/ThemeToggle'
+import { ThemePreviewCard } from '../components/ui/ThemePreviewCard'
 import { useSettingsStore } from '../store/settingsStore'
 import { useSessions } from '../hooks/useSessions'
 import { useTasks } from '../hooks/useTasks'
@@ -13,19 +13,31 @@ import { exportSessionsToCSV, exportToJSON, parseImportFile } from '../services/
 import { importData } from '../services/db'
 import type { AccentTheme } from '../types'
 import {
-  Bell, Download, Upload, Trash2, Moon, Target,
-  Shield, CheckCircle, AlertCircle, Check
+  Bell, Download, Upload, Trash2, Moon, Sun, Monitor, Target,
+  Shield, CheckCircle, AlertCircle
 } from 'lucide-react'
 import { clsx } from 'clsx'
 
-const ACCENT_THEMES: { id: AccentTheme; name: string; emoji: string; color: string }[] = [
-  { id: 'classic', name: 'Classic',   emoji: '⚡', color: '#6366f1' },
-  { id: 'f1',      name: 'F1 Racing', emoji: '🏎️', color: '#e10600' },
-  { id: 'fifa',    name: 'World Cup', emoji: '⚽', color: '#22c55e' },
+const ACCENT_THEMES: { id: AccentTheme; label: string; emoji: string }[] = [
+  { id: 'classic', label: 'Classic',   emoji: '⚡' },
+  { id: 'f1',      label: 'F1 Racing', emoji: '🏎️' },
+  { id: 'fifa',    label: 'World Cup', emoji: '⚽' },
+]
+
+const MODE_OPTIONS = [
+  { value: 'light'  as const, icon: Sun,     label: 'Light'  },
+  { value: 'dark'   as const, icon: Moon,    label: 'Dark'   },
+  { value: 'system' as const, icon: Monitor, label: 'System' },
 ]
 
 export function SettingsPage() {
-  const { settings, updateGoals, updateNotifications, updateSound, updateAccentTheme, resetSettings } = useSettingsStore()
+  const { settings, updateTheme, updateGoals, updateNotifications, updateSound, updateAccentTheme, resetSettings } = useSettingsStore()
+
+  // Compute effective isDark so ThemePreviewCard previews stay in sync
+  const isDark = settings.theme === 'dark' ||
+    (settings.theme === 'system' &&
+      typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-color-scheme: dark)').matches)
   const { sessions, reload: reloadSessions } = useSessions()
   const { tasks } = useTasks()
   const [importStatus, setImportStatus] = useState<'idle' | 'success' | 'error'>('idle')
@@ -79,54 +91,59 @@ export function SettingsPage() {
       <Header title="Settings" subtitle="Customize your experience" />
 
       <div className="flex-1 p-6 space-y-5 max-w-2xl mx-auto w-full">
-        {/* Theme */}
+        {/* Appearance */}
         <Card>
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2">
-              <Moon size={18} className="text-primary-500" />
-              <h3 className="font-semibold text-slate-900 dark:text-white">Appearance</h3>
-            </div>
+          <div className="flex items-center gap-2 mb-5">
+            <Moon size={18} className="text-primary-500" />
+            <h3 className="font-semibold text-slate-900 dark:text-white">Appearance</h3>
           </div>
 
-          {/* Light / dark */}
-          <div className="flex items-center justify-between mb-5">
-            <div>
-              <p className="text-sm font-medium text-slate-700 dark:text-slate-300">Colour mode</p>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Light, dark, or follow system</p>
-            </div>
-            <ThemeToggle />
-          </div>
-
-          {/* Accent theme */}
-          <div>
-            <p className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Accent theme</p>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mb-3">Changes the primary colour across the whole app</p>
-            <div className="flex gap-3">
-              {ACCENT_THEMES.map(({ id, name, emoji, color }) => {
-                const isActive = (settings.accentTheme ?? 'classic') === id
+          {/* Colour mode — 3-segment control */}
+          <div className="mb-6">
+            <p className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Colour mode</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mb-3">
+              Light, dark, or follow your system setting
+            </p>
+            <div className="flex gap-1.5 bg-slate-100 dark:bg-slate-800 rounded-2xl p-1.5">
+              {MODE_OPTIONS.map(({ value, icon: Icon, label }) => {
+                const active = settings.theme === value
                 return (
                   <button
-                    key={id}
-                    onClick={() => updateAccentTheme(id)}
-                    title={name}
+                    key={value}
+                    onClick={() => updateTheme(value)}
                     className={clsx(
-                      'flex flex-col items-center gap-1.5 px-3 py-2.5 rounded-xl border text-xs font-medium transition-all',
-                      isActive
-                        ? 'border-primary-500 bg-primary-500/10 text-primary-500'
-                        : 'border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-600'
+                      'flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-medium transition-all duration-200',
+                      active
+                        ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
+                        : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
                     )}
                   >
-                    <span className="flex items-center gap-1.5">
-                      <span
-                        className="inline-block w-3 h-3 rounded-full flex-shrink-0"
-                        style={{ backgroundColor: color }}
-                      />
-                      {emoji} {name}
-                    </span>
-                    {isActive && <Check size={10} className="text-primary-500" />}
+                    <Icon size={13} />
+                    {label}
                   </button>
                 )
               })}
+            </div>
+          </div>
+
+          {/* Accent colour — mini preview cards */}
+          <div>
+            <p className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Accent colour</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mb-3">
+              Changes the primary colour across the whole app instantly
+            </p>
+            <div className="grid grid-cols-3 gap-3">
+              {ACCENT_THEMES.map(({ id, label, emoji }) => (
+                <ThemePreviewCard
+                  key={id}
+                  id={id}
+                  label={label}
+                  emoji={emoji}
+                  isDark={isDark}
+                  isSelected={(settings.accentTheme ?? 'classic') === id}
+                  onClick={() => updateAccentTheme(id)}
+                />
+              ))}
             </div>
           </div>
         </Card>
