@@ -108,8 +108,8 @@ const THEME_DATA: Array<{
     ),
   },
   {
-    id:    'fifa',
-    name:  'World Cup',
+    id:    'football',
+    name:  'Football',
     emoji: '⚽',
     tagline:     'Stadium atmosphere and momentum',
     personality: 'Championship green with dual-ring stadium scoreboard.',
@@ -126,7 +126,7 @@ const THEME_DATA: Array<{
           fill="none" stroke="#22c55e" strokeWidth="4"
           strokeLinecap="round"
           strokeDasharray="163.4"
-          className="mini-ring-fifa-outer"
+          className="mini-ring-football-outer"
           transform="rotate(-90 32 32)"
         />
         {/* Inner track */}
@@ -138,7 +138,7 @@ const THEME_DATA: Array<{
           fill="none" stroke="#16a34a" strokeWidth="6.5"
           strokeLinecap="round"
           strokeDasharray="106.8"
-          className="mini-ring-fifa-inner"
+          className="mini-ring-football-inner"
           transform="rotate(-90 32 32)"
         />
         <text x="32" y="29" textAnchor="middle"

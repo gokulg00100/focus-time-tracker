@@ -21,7 +21,7 @@ import { clsx } from 'clsx'
 const ACCENT_THEMES: { id: AccentTheme; label: string; emoji: string }[] = [
   { id: 'classic', label: 'Classic',   emoji: '⚡' },
   { id: 'f1',      label: 'F1 Racing', emoji: '🏎️' },
-  { id: 'fifa',    label: 'World Cup', emoji: '⚽' },
+  { id: 'football', label: 'Football', emoji: '⚽' },
 ]
 
 const MODE_OPTIONS = [

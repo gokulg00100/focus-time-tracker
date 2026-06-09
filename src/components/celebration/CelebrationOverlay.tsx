@@ -21,13 +21,13 @@
  *   />
  */
 
-import { useEffect, useMemo }   from 'react'
-import { ClassicCelebration }   from './ClassicCelebration'
-import { F1Celebration }        from './F1Celebration'
-import { FIFACelebration }      from './FIFACelebration'
-import { useCelebrationSound }  from '../../hooks/useCelebrationSound'
-import type { AccentTheme }     from '../../types'
-import type { CelebrationData } from './CelebrationStats'
+import { useEffect, useMemo }      from 'react'
+import { ClassicCelebration }      from './ClassicCelebration'
+import { F1Celebration }           from './F1Celebration'
+import { FootballCelebration }     from './FootballCelebration'
+import { useCelebrationSound }     from '../../hooks/useCelebrationSound'
+import type { AccentTheme }        from '../../types'
+import type { CelebrationData }    from './CelebrationStats'
 
 // Re-export so consumers only need to import from this one file
 export type { CelebrationData }
@@ -37,9 +37,9 @@ const AUTO_DISMISS_MS = 5000
 
 // ── Accent colour for the countdown bar per theme ─────────────────────────────
 const ACCENT: Record<AccentTheme, string> = {
-  classic: 'rgb(var(--p-500))',
-  f1:      '#e10600',
-  fifa:    '#22c55e',
+  classic:  'rgb(var(--p-500))',
+  f1:       '#e10600',
+  football: '#22c55e',
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
@@ -104,16 +104,11 @@ export function CelebrationOverlay({
       {accentTheme === 'f1' && (
         <F1Celebration data={data} reduced={reduced} />
       )}
-      {accentTheme === 'fifa' && (
-        <FIFACelebration data={data} reduced={reduced} />
+      {accentTheme === 'football' && (
+        <FootballCelebration data={data} reduced={reduced} />
       )}
 
       {/* ── Auto-dismiss countdown bar ──────────────────────────── */}
-      {/*
-        Thin bar at the very bottom of the screen. Shrinks from full-width
-        to zero over AUTO_DISMISS_MS using a CSS keyframe animation so it's
-        silky-smooth at 60 fps without any JS timer.
-      */}
       <div
         className="fixed bottom-0 left-0 right-0 h-[3px] pointer-events-none"
         style={{ zIndex: 100 }}

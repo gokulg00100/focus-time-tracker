@@ -12,15 +12,15 @@
  * Timer variants:
  *   classic  → circular ring  (TimerDisplay / CircularProgress)
  *   f1       → speedometer    (F1TimerDisplay)
- *   fifa     → stadium rings  (FIFATimerDisplay)
+ *   football → stadium rings  (FootballTimerDisplay)
  */
 
 import { useState, useEffect } from 'react'
 import type { TimerStatus, AccentTheme } from '../../types'
-import { TimerDisplay }     from './TimerDisplay'
-import { F1TimerDisplay }   from './F1TimerDisplay'
-import { FIFATimerDisplay } from './FIFATimerDisplay'
-import { THEMES, getTokens } from '../../config/themes'
+import { TimerDisplay }         from './TimerDisplay'
+import { F1TimerDisplay }       from './F1TimerDisplay'
+import { FootballTimerDisplay } from './FootballTimerDisplay'
+import { THEMES, getTokens }    from '../../config/themes'
 
 // ── Responsive breakpoint hook ────────────────────────────────────────────────
 
@@ -62,8 +62,8 @@ const SIZES = {
   circular: { mobile: 260, desktop: 430 },
   // Tailwind-compatible container widths (SVG fills the container via w-full)
   svg: {
-    f1:   { mobile: 'w-[260px]', desktop: 'md:w-[430px]' },
-    fifa: { mobile: 'w-[260px]', desktop: 'md:w-[430px]' },
+    f1:       { mobile: 'w-[260px]', desktop: 'md:w-[430px]' },
+    football: { mobile: 'w-[260px]', desktop: 'md:w-[430px]' },
   },
 } as const
 
@@ -91,10 +91,10 @@ export function ThemeTimerDisplay({
         </div>
       )
 
-    case 'fifa':
+    case 'football':
       return (
-        <div className={`${SIZES.svg.fifa.mobile} ${SIZES.svg.fifa.desktop}`}>
-          <FIFATimerDisplay
+        <div className={`${SIZES.svg.football.mobile} ${SIZES.svg.football.desktop}`}>
+          <FootballTimerDisplay
             timerTextColor={tokens.timerText}
             timerTrackColor={tokens.timerTrack}
             accentHex={tokens.timerRing}

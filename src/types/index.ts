@@ -44,7 +44,7 @@ export interface Goals {
   monthlyMins: number
 }
 
-export type AccentTheme = 'classic' | 'f1' | 'fifa'
+export type AccentTheme = 'classic' | 'f1' | 'football'
 
 export interface UserSettings {
   breakConfig: BreakConfig | null

@@ -3,9 +3,9 @@ import type { AccentTheme } from '../../types'
 
 // ── Static accent hex values (needed for SVG attribute rendering) ────────────
 const ACCENT_HEX: Record<AccentTheme, string> = {
-  classic: '#6366f1',
-  f1:      '#e10600',
-  fifa:    '#22c55e',
+  classic:  '#6366f1',
+  f1:       '#e10600',
+  football: '#22c55e',
 }
 
 /** Convert #rrggbb → "r, g, b" string for use inside rgba() */

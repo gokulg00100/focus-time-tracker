@@ -4,9 +4,9 @@
  * Synthesises a one-shot celebration sound effect for each theme using the
  * Web Audio API — no audio files required.
  *
- *   F1      → Rising sawtooth engine rev (800 Hz → 3200 Hz + second peak)
- *   FIFA    → White-noise crowd roar through a bandpass filter
- *   Classic → Soft A-major arpeggio chime (A4 → C#5 → E5)
+ *   F1       → Rising sawtooth engine rev (800 Hz → 3200 Hz + second peak)
+ *   Football → White-noise crowd roar through a bandpass filter
+ *   Classic  → Soft A-major arpeggio chime (A4 → C#5 → E5)
  *
  * Falls back silently if:
  *   • `enabled` is false (user's sound toggle is off)
@@ -38,9 +38,9 @@ export function useCelebrationSound() {
       const ctx = ctxRef.current
       if (ctx.state === 'suspended') ctx.resume()
 
-      if (theme === 'f1')   playF1Rev(ctx)
-      else if (theme === 'fifa') playFIFACheer(ctx)
-      else                       playClassicChime(ctx)
+      if (theme === 'f1')          playF1Rev(ctx)
+      else if (theme === 'football') playFootballCheer(ctx)
+      else                           playClassicChime(ctx)
     } catch {
       // Silently ignore — audio is an enhancement, not a requirement
     }
@@ -94,10 +94,10 @@ function playF1Rev(ctx: AudioContext): void {
   osc2.stop(t + 1.35)
 }
 
-// ── FIFA stadium crowd cheer ──────────────────────────────────────────────────
+// ── Football stadium crowd cheer ──────────────────────────────────────────────
 // White noise + bandpass filter = crowd-texture roar
 
-function playFIFACheer(ctx: AudioContext): void {
+function playFootballCheer(ctx: AudioContext): void {
   const t        = ctx.currentTime
   const duration = 2.5
 

@@ -2,7 +2,7 @@
  * Theme Settings page — accessible anytime via /theme-settings.
  *
  * Sections:
- *   1. Theme selector  — large preview cards for Classic / F1 / FIFA
+ *   1. Theme selector  — large preview cards for Classic / F1 / Football
  *   2. Appearance      — Light / Dark / System mode selector
  *   3. Timer preview   — live mini-preview of the timer style for the chosen theme
  *   4. Ambient sound   — toggle (only shown when the theme supports it)
@@ -20,7 +20,7 @@ import { clsx } from 'clsx'
 
 // ── Helpers ────────────────────────────────────────────────────────────────────
 
-const ACCENT_ORDER: AccentTheme[] = ['classic', 'f1', 'fifa']
+const ACCENT_ORDER: AccentTheme[] = ['classic', 'f1', 'football']
 
 const MODE_OPTIONS = [
   { value: 'light',  Icon: Sun,     label: 'Light'  },
@@ -64,7 +64,7 @@ function TimerStylePreview({ accentTheme, isDark }: { accentTheme: AccentTheme; 
     )
   }
 
-  if (accentTheme === 'fifa') {
+  if (accentTheme === 'football') {
     // Dual concentric rings
     const CX = 50, CY = 50
     const R1 = 36, R2 = 27
@@ -215,7 +215,7 @@ export function ThemeSettingsPage() {
           >
             <div className={clsx(
               'w-36 h-36 transition-all',
-              selected === 'fifa' ? 'w-36 h-36' : selected === 'f1' ? 'w-44 h-36' : 'w-36 h-36',
+              selected === 'football' ? 'w-36 h-36' : selected === 'f1' ? 'w-44 h-36' : 'w-36 h-36',
             )}>
               <TimerStylePreview accentTheme={selected} isDark={isDark} />
             </div>

@@ -57,8 +57,8 @@
     --p-950: 65 0 0;
   }
 
-  /* ── FIFA World Cup theme (Championship Green) ───────────────────────── */
-  .theme-fifa {
+  /* ── Football theme (Championship Green) ────────────────────────────── */
+  .theme-football {
     --p-50:  240 253 244;
     --p-100: 220 252 231;
     --p-200: 187 247 208;
@@ -97,6 +97,25 @@
   }
 }
 
+/* ── Landing page animations ────────────────────────────────────────────── */
+@keyframes particleFloat {
+  0%, 100% { transform: translateY(0px)  scale(1);   }
+  50%       { transform: translateY(-18px) scale(1.1); }
+}
+@keyframes floatBadge {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-6px); }
+}
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.4; transform: scale(1);    }
+  50%       { opacity: 0.7; transform: scale(1.05); }
+}
+@keyframes slideDownIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0);     }
+}
+.landing-fade-in { animation: slideDownIn 0.6s ease forwards; }
+
 /* ── Onboarding bar-grow keyframe ──────────────────────────────────────────
    Used via inline `animation` styles in AnalyticsScreen (not a Tailwind
    utility class) so it must live here as a global keyframe.               */
@@ -118,7 +137,7 @@
 }
 .f1-pit-stop { animation: pitStop 0.7s ease-in-out infinite; }
 
-/* ── Half-time bounce for FIFA ball when paused ──────────────────────── */
+/* ── Half-time bounce for Football ball when paused ─────────────────── */
 @keyframes halfTime {
   0%, 100% { transform: scale(1);    opacity: 1;   }
   50%       { transform: scale(1.2); opacity: 0.7; }
@@ -157,8 +176,8 @@
    Circumferences:
      Classic  r=24  → C ≈ 150.8
      F1       r=22  → 270° arc length ≈ 103.6  (gap = 34.6)
-     FIFA     outer r=26 → C ≈ 163.4
-             inner  r=17 → C ≈ 106.8               */
+     Football outer r=26 → C ≈ 163.4
+              inner r=17 → C ≈ 106.8              */
 @keyframes miniRingFill {
   0%   { stroke-dashoffset: 148; }
   70%  { stroke-dashoffset: 18;  }
@@ -170,21 +189,21 @@
   70%  { stroke-dashoffset: 10;  }
   100% { stroke-dashoffset: 103; }
 }
-@keyframes miniFifaOuter {
+@keyframes miniFootballOuter {
   0%   { stroke-dashoffset: 160; }
   70%  { stroke-dashoffset: 18;  }
   100% { stroke-dashoffset: 160; }
 }
-@keyframes miniFifaInner {
+@keyframes miniFootballInner {
   0%,  15% { stroke-dashoffset: 104; }
   75%      { stroke-dashoffset: 12;  }
   95%      { stroke-dashoffset: 104; }
   100%     { stroke-dashoffset: 104; }
 }
-.mini-ring-classic    { animation: miniRingFill   3.8s ease-in-out 0.20s  infinite; }
-.mini-ring-f1         { animation: miniSpeedFill  3.8s ease-in-out 0.00s  infinite; }
-.mini-ring-fifa-outer { animation: miniFifaOuter  4.2s ease-in-out 0.10s  infinite; }
-.mini-ring-fifa-inner { animation: miniFifaInner  4.2s ease-in-out 0.90s  infinite; }
+.mini-ring-classic        { animation: miniRingFill      3.8s ease-in-out 0.20s  infinite; }
+.mini-ring-f1             { animation: miniSpeedFill     3.8s ease-in-out 0.00s  infinite; }
+.mini-ring-football-outer { animation: miniFootballOuter 4.2s ease-in-out 0.10s  infinite; }
+.mini-ring-football-inner { animation: miniFootballInner 4.2s ease-in-out 0.90s  infinite; }
 
 /* ── Onboarding: launch-screen confetti particles ───────────────────────
    Particles float upward and fade out, then loop.                        */
@@ -261,7 +280,7 @@
   100% { transform: scale(2.4);  opacity: 0;    }
 }
 
-/* FIFA: "GOOOOAAALLLL!!!" zoom burst */
+/* Football: "GOOOOAAALLLL!!!" zoom burst */
 @keyframes goalZoom {
   0%   { transform: scale(0.18) rotate(-10deg); opacity: 0; }
   55%  { transform: scale(1.14) rotate(3deg);   opacity: 1; }
@@ -269,14 +288,14 @@
 }
 .goal-zoom { animation: goalZoom 0.65s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
 
-/* FIFA: player silhouette slide-in */
+/* Football: player silhouette slide-in */
 @keyframes playerIn {
   from { transform: translateY(30px) scale(0.8); opacity: 0; }
   to   { transform: translateY(0)    scale(1);   opacity: 1; }
 }
 .player-in { animation: playerIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
 
-/* FIFA: ambient green pulse rings */
+/* Football: ambient green pulse rings */
 @keyframes greenPulse {
   0%   { transform: scale(0.9); opacity: 0.5; }
   100% { transform: scale(2.8); opacity: 0;   }

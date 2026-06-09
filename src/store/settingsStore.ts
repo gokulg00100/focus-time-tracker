@@ -20,6 +20,13 @@ const DEFAULT_SETTINGS: UserSettings = {
   ambientSoundEnabled: false,
 }
 
+/** Migrate legacy stored values that may use the old 'fifa' key. */
+function migrateAccentTheme(stored: unknown): AccentTheme {
+  if (stored === 'fifa') return 'football'
+  if (stored === 'classic' || stored === 'f1' || stored === 'football') return stored
+  return 'classic'
+}
+
 interface SettingsState {
   settings: UserSettings
   updateBreakConfig: (config: BreakConfig | null) => void
@@ -52,6 +59,14 @@ export const useSettingsStore = create<SettingsState>()(
         set((s) => ({ settings: { ...s.settings, ambientSoundEnabled: enabled } })),
       resetSettings: () => set({ settings: DEFAULT_SETTINGS }),
     }),
-    { name: 'focus-tracker-settings' }
+    {
+      name: 'focus-tracker-settings',
+      // Migrate 'fifa' → 'football' on hydration from localStorage
+      onRehydrateStorage: () => (state) => {
+        if (state?.settings?.accentTheme) {
+          state.settings.accentTheme = migrateAccentTheme(state.settings.accentTheme)
+        }
+      },
+    }
   )
 )

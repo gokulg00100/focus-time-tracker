@@ -286,11 +286,11 @@ export const THEMES: Record<AccentTheme, ThemeDef> = {
     },
   },
 
-  // ── FIFA World Cup ────────────────────────────────────────────────────────
-  fifa: {
-    id: 'fifa',
-    name: 'World Cup',
-    tagline: 'Champions are made in training.',
+  // ── Football ──────────────────────────────────────────────────────────────
+  football: {
+    id: 'football',
+    name: 'Football',
+    tagline: 'Score goals through consistency.',
     emoji: '⚽',
 
     primaryScale: [
@@ -369,10 +369,10 @@ export const THEMES: Record<AccentTheme, ThemeDef> = {
       bgMotion: true,
     },
     sound: {
-      available: false,
+      available: true,
       synthType: 'none',
-      label: 'No ambient sound',
-      description: 'Stay in the zone with silence.',
+      label: 'Crowd cheer',
+      description: 'Stadium atmosphere to fuel your focus.',
     },
   },
 }

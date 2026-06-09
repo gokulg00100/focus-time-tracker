@@ -38,9 +38,9 @@ export function useTheme() {
     })
 
     // Theme class (for any remaining CSS selectors that still use it)
-    root.classList.remove('theme-f1', 'theme-fifa')
-    if (accentTheme === 'f1')   root.classList.add('theme-f1')
-    if (accentTheme === 'fifa') root.classList.add('theme-fifa')
+    root.classList.remove('theme-f1', 'theme-football')
+    if (accentTheme === 'f1')       root.classList.add('theme-f1')
+    if (accentTheme === 'football') root.classList.add('theme-football')
   }, [accentTheme])
 
   // ── Theme background on <body> ───────────────────────────────────────────
