@@ -143,8 +143,7 @@ export function FIFATimerDisplay({
   const outerC = arcLen(R_OUTER)
   const innerC = arcLen(R_INNER)
   const glowColor  = ringColor + '88'
-  const dimText    = timerTextColor + '70'
-  const faintText  = timerTextColor + '40'
+  const dimText   = timerTextColor + '70'
 
   // Decorative dot crown
   const dots = Array.from({ length: DOTS }, (_, i) => {
@@ -250,12 +249,6 @@ export function FIFATimerDisplay({
             ? formatSeconds(plannedDurationSecs) + ' planned'
             : formatSeconds(Math.floor(elapsedFocusSecs)) + ' elapsed'}
         </text>
-
-        {/* ── Corner accent balls (decorative) ── */}
-        <text x={CX - 56} y={CY + 6} textAnchor="middle"
-          fontSize="15" fill={faintText}>⚽</text>
-        <text x={CX + 56} y={CY + 6} textAnchor="middle"
-          fontSize="15" fill={faintText}>⚽</text>
       </svg>
 
       {status !== 'idle' && (
