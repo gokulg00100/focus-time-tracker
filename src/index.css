@@ -200,3 +200,101 @@
 .ob-card-enter {
   animation: slideUp 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
+
+/* ════════════════════════════════════════════════════════════════════════
+   COMPLETION CELEBRATION ANIMATIONS
+   ════════════════════════════════════════════════════════════════════════ */
+
+/* Overlay fade-in — applied to the fixed root div */
+@keyframes celebIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.celeb-backdrop { animation: celebIn 0.3s ease forwards; }
+
+/* Classic: ripple ring expanding outward from centre */
+@keyframes rippleRing {
+  0%   { transform: scale(0.6);  opacity: 0.7; }
+  100% { transform: scale(3.2);  opacity: 0;   }
+}
+/* Classic: card rise-in */
+@keyframes celebCardIn {
+  from { transform: translateY(36px) scale(0.96); opacity: 0; }
+  to   { transform: translateY(0)    scale(1);    opacity: 1; }
+}
+.celeb-card-in {
+  animation: celebCardIn 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Classic: checkmark circle stroke draws in */
+@keyframes checkRing {
+  from { stroke-dashoffset: 264; }    /* 2π×42 ≈ 264 */
+  to   { stroke-dashoffset: 0; }
+}
+.check-ring { animation: checkRing 0.6s ease forwards; }
+
+/* Classic: checkmark tick draws in */
+@keyframes checkTick {
+  from { stroke-dashoffset: 62; }
+  to   { stroke-dashoffset: 0;  }
+}
+.check-tick { animation: checkTick 0.4s ease 0.55s forwards; }
+
+/* F1: title stamp effect (letter-spacing contract) */
+@keyframes f1Stamp {
+  0%   { letter-spacing: 0.35em; opacity: 0; transform: scale(1.1); }
+  70%  { transform: scale(0.97); }
+  100% { letter-spacing: 0.1em;  opacity: 1; transform: scale(1);   }
+}
+.f1-stamp { animation: f1Stamp 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+
+/* F1: tagline rise */
+@keyframes f1TagIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+.f1-tag-in { animation: f1TagIn 0.4s ease forwards; }
+
+/* F1: ambient red pulse rings */
+@keyframes redPulse {
+  0%   { transform: scale(1);    opacity: 0.45; }
+  100% { transform: scale(2.4);  opacity: 0;    }
+}
+
+/* FIFA: "GOOOOAAALLLL!!!" zoom burst */
+@keyframes goalZoom {
+  0%   { transform: scale(0.18) rotate(-10deg); opacity: 0; }
+  55%  { transform: scale(1.14) rotate(3deg);   opacity: 1; }
+  100% { transform: scale(1)    rotate(0deg);   opacity: 1; }
+}
+.goal-zoom { animation: goalZoom 0.65s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+
+/* FIFA: player silhouette slide-in */
+@keyframes playerIn {
+  from { transform: translateY(30px) scale(0.8); opacity: 0; }
+  to   { transform: translateY(0)    scale(1);   opacity: 1; }
+}
+.player-in { animation: playerIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+
+/* FIFA: ambient green pulse rings */
+@keyframes greenPulse {
+  0%   { transform: scale(0.9); opacity: 0.5; }
+  100% { transform: scale(2.8); opacity: 0;   }
+}
+
+/* Stats card universal slide-up */
+@keyframes statsIn {
+  from { transform: translateY(28px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+.celeb-stats-in { animation: statsIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+
+/* Auto-dismiss countdown bar (5 s) */
+@keyframes dismissCountdown {
+  from { transform: scaleX(1); }
+  to   { transform: scaleX(0); }
+}
+.dismiss-bar {
+  animation: dismissCountdown 5s linear forwards;
+  transform-origin: left center;
+}

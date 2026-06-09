@@ -9,7 +9,7 @@
  * Mobile layout: single stacked column (unchanged from original).
  */
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Header }               from '../components/layout/Header'
 import { ThemeTimerDisplay }    from '../components/timer/ThemeTimerDisplay'
 import { TimerControls }        from '../components/timer/TimerControls'
@@ -24,6 +24,11 @@ import { useSettingsStore }     from '../store/settingsStore'
 import { useAmbientSound }      from '../hooks/useAmbientSound'
 import { useTheme }             from '../hooks/useTheme'
 import { THEMES }               from '../config/themes'
+import { CelebrationOverlay }   from '../components/celebration/CelebrationOverlay'
+import type { CelebrationData } from '../components/celebration/CelebrationOverlay'
+import { getAllSessions }        from '../services/db'
+import { calculateCurrentStreak } from '../utils/streak'
+import { getDateKey }           from '../utils/time'
 import type { UserSettings, Task } from '../types'
 import { Clock, Coffee, Target, ChevronDown } from 'lucide-react'
 import { clsx }                 from 'clsx'
@@ -34,6 +39,54 @@ export function TimerPage() {
   const { settings } = useSettingsStore()
   const { accentTheme, isDark } = useTheme()
   const [showBreakConfig, setShowBreakConfig] = useState(false)
+
+  // ── Completion celebration ────────────────────────────────────────────────
+  const [celebData, setCelebData]             = useState<CelebrationData | null>(null)
+  const celebTriggeredRef                     = useRef(false)
+
+  useEffect(() => {
+    // Trigger exactly once when status transitions INTO 'completed'
+    if (timer.status === 'completed' && !celebTriggeredRef.current) {
+      celebTriggeredRef.current = true
+
+      // Brief delay lets useTimer's saveCurrentSession DB write finish
+      let cancelled = false
+      ;(async () => {
+        await new Promise<void>((r) => setTimeout(r, 300))
+        if (cancelled) return
+
+        const sessions  = await getAllSessions()
+        if (cancelled) return
+
+        const today     = getDateKey(new Date())
+        const todayMins = sessions
+          .filter((s) => s.date === today)
+          .reduce((sum, s) => sum + Math.round(s.actualFocusSecs / 60), 0)
+        const streak    = calculateCurrentStreak(sessions)
+
+        setCelebData({
+          completedSecs: Math.round(timer.elapsedFocusSecs),
+          streak,
+          todayMins,
+          goalMins: settings.goals.dailyMins,
+        })
+      })()
+
+      return () => { cancelled = true }
+    }
+
+    // Clear everything when timer returns to idle (after dismiss + reset)
+    if (timer.status === 'idle') {
+      celebTriggeredRef.current = false
+      setCelebData(null)
+    }
+  }, [timer.status]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleCelebrationDismiss = () => {
+    setCelebData(null)
+    timer.handleReset()
+  }
+  // ─────────────────────────────────────────────────────────────────────────
 
   const canEdit     = timer.status === 'idle' || timer.status === 'completed'
   const activeTasks = tasks.filter((t) => !t.completed)
@@ -162,6 +215,18 @@ export function TimerPage() {
           </div>
         )}
       </div>
+
+      {/* ── Completion celebration overlay ──────────────────────────────────
+          Renders above everything (z-50) when a session naturally completes. */}
+      {celebData && (
+        <CelebrationOverlay
+          accentTheme={accentTheme}
+          isDark={isDark}
+          data={celebData}
+          soundEnabled={settings.soundEnabled}
+          onDismiss={handleCelebrationDismiss}
+        />
+      )}
     </div>
   )
 }
