@@ -1,76 +1,125 @@
-import { NavLink } from 'react-router-dom'
-import {
-  Timer,
-  LayoutDashboard,
-  BarChart2,
-  TrendingUp,
-  Calendar,
-  CheckSquare,
-  Settings,
-  Zap,
-  Palette,
-} from 'lucide-react'
-import { clsx } from 'clsx'
+/**
+ * Premium sidebar navigation.
+ *
+ * Visual treatment:
+ *  • Glassmorphism: semi-transparent surface + saturated backdrop blur
+ *  • Active item: solid accent-500 pill with theme-matching glow
+ *  • Inactive items: flat, minimal hover
+ *  • Logo: accent-coloured subtitle
+ *  • Bottom: keyboard shortcuts with glass pill style
+ */
 
-const nav = [
-  { to: '/', icon: Timer, label: 'Timer' },
-  { to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
-  { to: '/statistics', icon: BarChart2, label: 'Statistics' },
-  { to: '/analytics', icon: TrendingUp, label: 'Analytics' },
-  { to: '/calendar', icon: Calendar, label: 'Calendar' },
-  { to: '/tasks', icon: CheckSquare, label: 'Tasks' },
-  { to: '/settings',       icon: Settings, label: 'Settings' },
-  { to: '/theme-settings', icon: Palette,  label: 'Themes'   },
+import { NavLink }   from 'react-router-dom'
+import {
+  Timer, LayoutDashboard, BarChart2, TrendingUp,
+  Calendar, CheckSquare, Settings, Zap, Palette,
+} from 'lucide-react'
+import { clsx }     from 'clsx'
+
+const NAV = [
+  { to: '/',               icon: Timer,          label: 'Timer'      },
+  { to: '/dashboard',      icon: LayoutDashboard, label: 'Dashboard'  },
+  { to: '/statistics',     icon: BarChart2,       label: 'Statistics' },
+  { to: '/analytics',      icon: TrendingUp,      label: 'Analytics'  },
+  { to: '/calendar',       icon: Calendar,        label: 'Calendar'   },
+  { to: '/tasks',          icon: CheckSquare,     label: 'Tasks'      },
+  { to: '/settings',       icon: Settings,        label: 'Settings'   },
+  { to: '/theme-settings', icon: Palette,         label: 'Themes'     },
 ]
 
 export function Sidebar() {
   return (
-    <aside className="hidden md:flex flex-col w-64 min-h-screen bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 px-4 py-6 fixed left-0 top-0 bottom-0 z-30">
-      {/* Logo */}
-      <div className="flex items-center gap-3 px-3 mb-8">
-        <div className="flex items-center justify-center w-9 h-9 bg-primary-500 rounded-xl shadow-glow">
-          <Zap size={18} className="text-white" />
+    <aside
+      className={clsx(
+        'hidden md:flex flex-col w-64 min-h-screen',
+        'fixed left-0 top-0 bottom-0 z-30',
+        'px-4 py-6',
+        // Glassmorphism: semi-transparent + backdrop blur + vendor prefix
+        'bg-white/[0.97] dark:bg-slate-950/[0.97]',
+        'border-r border-slate-200/60 dark:border-slate-800/60',
+        'glass-panel',
+      )}
+    >
+
+      {/* ── Logo ─────────────────────────────────────────────────────────── */}
+      <div className="flex items-center gap-3 px-2 mb-8">
+        <div className="relative flex-shrink-0">
+          <div className="flex items-center justify-center w-10 h-10 bg-primary-500 rounded-xl shadow-glow">
+            <Zap size={20} className="text-white" />
+          </div>
+          {/* Glow pulse ring */}
+          <div className="absolute inset-0 rounded-xl bg-primary-500 opacity-20 animate-ping [animation-duration:3s]"/>
         </div>
         <div>
-          <div className="font-bold text-slate-900 dark:text-white text-sm leading-tight">Focus</div>
-          <div className="text-xs text-slate-500 dark:text-slate-400">Time Tracker</div>
+          <div className="font-bold text-slate-900 dark:text-white text-[15px] leading-tight tracking-tight">
+            Focus
+          </div>
+          <div className="text-[11px] font-semibold text-primary-500 tracking-wide">
+            Time Tracker
+          </div>
         </div>
       </div>
 
-      {/* Nav */}
-      <nav className="flex-1 space-y-1">
-        {nav.map(({ to, icon: Icon, label }) => (
+      {/* ── Navigation ───────────────────────────────────────────────────── */}
+      <nav className="flex-1 space-y-0.5">
+        {NAV.map(({ to, icon: Icon, label }) => (
           <NavLink
             key={to}
             to={to}
             end={to === '/'}
             className={({ isActive }) =>
               clsx(
-                'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200',
+                'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium',
+                'transition-all duration-150',
                 isActive
-                  ? 'bg-primary-50 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400'
-                  : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-100'
+                  ? 'bg-primary-500 text-white shadow-glow'
+                  : [
+                    'text-slate-600 dark:text-slate-400',
+                    'hover:bg-slate-100/80 dark:hover:bg-slate-800/80',
+                    'hover:text-slate-900 dark:hover:text-slate-100',
+                  ]
               )
             }
           >
-            <Icon size={18} />
-            {label}
+            {({ isActive }) => (
+              <>
+                <Icon
+                  size={17}
+                  className={isActive ? 'text-white' : 'text-slate-400 dark:text-slate-500'}
+                />
+                <span className={isActive ? 'font-semibold' : ''}>
+                  {label}
+                </span>
+              </>
+            )}
           </NavLink>
         ))}
       </nav>
 
-      <div className="mt-4 px-3 py-3 bg-primary-50 dark:bg-primary-900/20 rounded-xl">
-        <p className="text-xs font-medium text-primary-700 dark:text-primary-400">Keyboard Shortcuts</p>
-        <div className="mt-2 space-y-1">
-          <div className="flex items-center justify-between text-xs text-slate-600 dark:text-slate-400">
-            <span>Start/Pause</span><kbd className="bg-white dark:bg-slate-700 px-1.5 py-0.5 rounded text-xs shadow-sm">Space</kbd>
-          </div>
-          <div className="flex items-center justify-between text-xs text-slate-600 dark:text-slate-400">
-            <span>Stop</span><kbd className="bg-white dark:bg-slate-700 px-1.5 py-0.5 rounded text-xs shadow-sm">Esc</kbd>
-          </div>
-          <div className="flex items-center justify-between text-xs text-slate-600 dark:text-slate-400">
-            <span>Reset</span><kbd className="bg-white dark:bg-slate-700 px-1.5 py-0.5 rounded text-xs shadow-sm">R</kbd>
-          </div>
+      {/* ── Keyboard shortcuts ───────────────────────────────────────────── */}
+      <div className="mt-4 px-3 py-3 bg-primary-500/[0.07] dark:bg-primary-500/[0.1] rounded-xl border border-primary-500/10">
+        <p className="text-[11px] font-semibold text-primary-600 dark:text-primary-400 tracking-wide uppercase mb-2">
+          Shortcuts
+        </p>
+        <div className="space-y-1.5">
+          {[
+            { label: 'Start / Pause', key: 'Space' },
+            { label: 'Stop',         key: 'Esc'   },
+            { label: 'Reset',        key: 'R'     },
+          ].map(({ label, key }) => (
+            <div key={key} className="flex items-center justify-between text-[11px]">
+              <span className="text-slate-500 dark:text-slate-400">{label}</span>
+              <kbd className="
+                px-1.5 py-0.5 rounded-md text-[10px] font-semibold
+                bg-white dark:bg-slate-800
+                text-slate-600 dark:text-slate-300
+                border border-slate-200 dark:border-slate-700
+                shadow-sm
+              ">
+                {key}
+              </kbd>
+            </div>
+          ))}
         </div>
       </div>
     </aside>

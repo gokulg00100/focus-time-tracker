@@ -1,24 +1,30 @@
 /**
- * F1 Racing theme timer — speedometer-style arc gauge.
+ * F1 Racing theme timer — speedometer arc gauge with animated race car.
  *
- * Sizing: controlled entirely by the parent wrapper div.
- * The SVG uses viewBox="0 0 280 220" with className="w-full h-auto" so
- * it fills whatever container the parent provides.
+ * The Formula 1 car travels along the 240 ° progress arc:
+ *   • Running  → car drives smoothly at the arc tip + red neon glow trail
+ *   • Paused   → car shakes in place (pit-stop animation)
+ *   • Idle     → no car displayed
+ *   • Complete → car sits at 100 % position, engine glows
  *
- * Token props replace all previously-hardcoded colours so the display
- * remains readable in both light and dark modes (WCAG AAA).
+ * Position animation: useSmoothValue interpolates between each 1-second
+ * timer tick at 60 fps (cubic ease-out, 650 ms) so the car moves fluidly.
+ *
+ * Car orientation: drawn facing RIGHT (+x).  SVG transform `rotate(θ+90)`
+ * aligns the nose to the clockwise tangent at arc angle θ.
  */
 
+import { useState, useEffect, useRef } from 'react'
 import { formatSeconds } from '../../utils/time'
 import type { TimerStatus } from '../../types'
 
 // ── Arc geometry ──────────────────────────────────────────────────────────────
 
 const CX = 140, CY = 175, R = 110
-const FULL_C    = 2 * Math.PI * R          // 691.15
+const FULL_C    = 2 * Math.PI * R
 const ARC_DEG   = 240
-const ARC_LEN   = (ARC_DEG / 360) * FULL_C // 460.77
-const START_DEG = 150  // SVG degrees (0 ° = 3-o'clock)
+const ARC_LEN   = (ARC_DEG / 360) * FULL_C
+const START_DEG = 150
 
 function pt(deg: number, r = R) {
   const rad = (deg * Math.PI) / 180
@@ -29,11 +35,38 @@ const TICKS = Array.from({ length: 13 }, (_, i) => {
   const deg   = (START_DEG + i * 20) % 360
   const major = i % 4 === 0
   return {
-    ...{ x1: pt(deg, R - (major ? 14 : 9)).x, y1: pt(deg, R - (major ? 14 : 9)).y },
-    ...{ x2: pt(deg, R + 3).x,                y2: pt(deg, R + 3).y },
+    x1: pt(deg, R - (major ? 14 : 9)).x, y1: pt(deg, R - (major ? 14 : 9)).y,
+    x2: pt(deg, R + 3).x,                y2: pt(deg, R + 3).y,
     major,
   }
 })
+
+// ── Smooth animation hook ─────────────────────────────────────────────────────
+
+function useSmoothValue(target: number, duration = 650): number {
+  const [value, setValue] = useState(target)
+  const prevRef = useRef(target)
+
+  useEffect(() => {
+    const from = prevRef.current
+    prevRef.current = target
+    if (Math.abs(target - from) < 5e-5) { setValue(target); return }
+
+    let raf: number
+    const t0 = performance.now()
+
+    const step = (now: number) => {
+      const t     = Math.min((now - t0) / duration, 1)
+      const eased = 1 - Math.pow(1 - t, 3) // cubic ease-out
+      setValue(from + (target - from) * eased)
+      if (t < 1) raf = requestAnimationFrame(step)
+    }
+    raf = requestAnimationFrame(step)
+    return () => cancelAnimationFrame(raf)
+  }, [target, duration])
+
+  return value
+}
 
 // ── Props ─────────────────────────────────────────────────────────────────────
 
@@ -43,14 +76,11 @@ interface Props {
   elapsedFocusSecs:    number
   progress:            number
   plannedDurationSecs: number
-  /** WCAG-passing colour for the timer digits — from theme tokens */
-  timerTextColor:  string
-  /** Subtle track-arc colour — from theme tokens */
-  timerTrackColor: string
-  /** Active accent colour (may be overridden by state: amber=paused, green=break) */
-  accentHex: string
-  breakRemaining?: number
-  breakProgress?:  number
+  timerTextColor:      string
+  timerTrackColor:     string
+  accentHex:           string
+  breakRemaining?:     number
+  breakProgress?:      number
 }
 
 const STATUS_LABELS: Record<TimerStatus, string> = {
@@ -59,6 +89,52 @@ const STATUS_LABELS: Record<TimerStatus, string> = {
   paused:    'PIT STOP',
   break:     'COOLDOWN',
   completed: 'CHEQUERED',
+}
+
+// ── F1 Car SVG (drawn facing right, origin at centre of car) ─────────────────
+
+function F1Car({ color, isPitStop }: { color: string; isPitStop: boolean }) {
+  return (
+    /* Outer group: positioned & rotated by parent.
+       Inner group: receives CSS pit-stop animation. */
+    <g className={isPitStop ? 'f1-pit-stop' : 'actor-appear'}>
+      {/* Exhaust glow behind the car */}
+      <ellipse cx="-14" cy="0" rx="8" ry="4"
+        fill={color} opacity="0.25"
+        style={{ filter: 'blur(5px)' }}
+      />
+
+      {/* ── Car body ── */}
+      {/* Rear wing */}
+      <rect x="-14" y="-7" width="3.5" height="14" rx="1.8"
+        fill="rgba(180,180,180,0.85)"/>
+      {/* Main body — tapered teardrop shape */}
+      <path d="M -10,-3.5 L 6,-3.5 Q 16,0 6,3.5 L -10,3.5 Z"
+        fill={color}/>
+      {/* Cockpit / halo */}
+      <ellipse cx="-1" cy="0" rx="4.5" ry="2.2" fill="#0a0a0a"/>
+      {/* Front wing */}
+      <rect x="8" y="-5.5" width="6" height="2" rx="1" fill={color} opacity="0.8"/>
+      <rect x="8" y="3.5"  width="6" height="2" rx="1" fill={color} opacity="0.8"/>
+      {/* Race number stripe */}
+      <rect x="-5" y="-1.2" width="7" height="2.4" rx="1.2"
+        fill="white" opacity="0.55"/>
+
+      {/* ── Wheels ── */}
+      {/* Front pair */}
+      <rect x="3" y="-8"  width="4.5" height="4.5" rx="2.2" fill="#111"/>
+      <rect x="3" y="3.5" width="4.5" height="4.5" rx="2.2" fill="#111"/>
+      {/* Rear pair */}
+      <rect x="-10" y="-8"  width="4.5" height="4.5" rx="2.2" fill="#111"/>
+      <rect x="-10" y="3.5" width="4.5" height="4.5" rx="2.2" fill="#111"/>
+
+      {/* Wheel glint */}
+      <circle cx="5.2"   cy="-5.8" r="1.2" fill="rgba(255,255,255,0.3)"/>
+      <circle cx="5.2"   cy="5.8"  r="1.2" fill="rgba(255,255,255,0.3)"/>
+      <circle cx="-7.8"  cy="-5.8" r="1.2" fill="rgba(255,255,255,0.3)"/>
+      <circle cx="-7.8"  cy="5.8"  r="1.2" fill="rgba(255,255,255,0.3)"/>
+    </g>
+  )
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
@@ -73,23 +149,41 @@ export function F1TimerDisplay({
   const displaySecs = isBreak ? breakRemaining : remainingFocusSecs
   const displayPct  = isBreak ? breakProgress  : progress
 
-  // Ring colour changes for pause / break — semantic state feedback
   const ringColor =
     status === 'paused' ? '#f59e0b' :
     status === 'break'  ? '#10b981' :
     accentHex
 
-  const progressLen = displayPct * ARC_LEN
-  const glowColor   = `${ringColor}99`
+  // Smooth position for the car (runs at 60 fps between 1-second ticks)
+  const smoothPct = useSmoothValue(displayPct, 650)
 
-  // Sub-label alpha derived from timerTextColor — avoids hardcoded rgba
-  // by appending hex opacity suffixes.
-  const dimText  = timerTextColor + '70'  // ~44% opacity
-  const faintText = timerTextColor + '40' // ~25% opacity
+  // Car position along the 240 ° arc
+  const carAngleDeg   = (START_DEG + smoothPct * ARC_DEG) % 360
+  const carRad        = carAngleDeg * Math.PI / 180
+  const carX          = CX + R * Math.cos(carRad)
+  const carY          = CY + R * Math.sin(carRad)
+  const carRot        = carAngleDeg + 90 // tangent for clockwise travel
+
+  const showCar = smoothPct > 5e-4 && status !== 'idle'
+
+  const progressLen = smoothPct * ARC_LEN
+  const dimText     = timerTextColor + '70'
+  const faintText   = timerTextColor + '40'
+  const glowColor   = ringColor + '99'
 
   return (
     <div className="flex flex-col items-center gap-3">
-      <svg viewBox="0 0 280 220" className="w-full h-auto" aria-hidden>
+      {/* SVG viewBox extended to 235 to avoid clipping arc endpoints */}
+      <svg viewBox="0 0 280 235" overflow="visible" className="w-full h-auto" aria-hidden>
+
+        {/* ── Radial depth gradient behind the arc ── */}
+        <defs>
+          <radialGradient id="arcDepth" cx="50%" cy="75%" r="55%">
+            <stop offset="0%"   stopColor={ringColor} stopOpacity="0.04"/>
+            <stop offset="100%" stopColor={ringColor} stopOpacity="0"/>
+          </radialGradient>
+        </defs>
+        <rect width="280" height="235" fill="url(#arcDepth)"/>
 
         {/* ── Track arc ── */}
         <circle cx={CX} cy={CY} r={R}
@@ -97,8 +191,22 @@ export function F1TimerDisplay({
           strokeWidth={14}
           strokeDasharray={`${ARC_LEN} 99999`}
           transform={`rotate(${START_DEG} ${CX} ${CY})`}
-          strokeLinecap="butt"
+          strokeLinecap="round"
         />
+
+        {/* ── Glow trail (wider semi-transparent arc just behind progress tip) ── */}
+        {showCar && progressLen > 30 && (
+          <circle cx={CX} cy={CY} r={R}
+            fill="none" stroke={ringColor}
+            strokeWidth={22}
+            strokeDasharray={`${Math.min(progressLen, 50)} 99999`}
+            strokeDashoffset={-(Math.max(0, progressLen - 50))}
+            transform={`rotate(${START_DEG} ${CX} ${CY})`}
+            strokeLinecap="round"
+            opacity={0.18}
+            style={{ filter: `blur(4px)` }}
+          />
+        )}
 
         {/* ── Progress arc ── */}
         <circle cx={CX} cy={CY} r={R}
@@ -108,8 +216,8 @@ export function F1TimerDisplay({
           transform={`rotate(${START_DEG} ${CX} ${CY})`}
           strokeLinecap="round"
           style={{
-            filter: `drop-shadow(0 0 12px ${glowColor})`,
-            transition: 'stroke-dasharray 0.5s ease',
+            filter: `drop-shadow(0 0 10px ${glowColor})`,
+            transition: 'stroke 0.3s ease',
           }}
         />
 
@@ -123,31 +231,50 @@ export function F1TimerDisplay({
           />
         ))}
 
-        {/* ── Endpoint dots ── */}
-        {[pt(START_DEG, R), pt(30, R)].map((p, i) => (
-          <circle key={i} cx={p.x} cy={p.y} r={4}
-            fill={timerTrackColor} stroke={ringColor} strokeWidth={2}
+        {/* ── Arc endpoint dots ── */}
+        {[pt(START_DEG), pt(30)].map((p, i) => (
+          <circle key={i} cx={p.x} cy={p.y} r={4.5}
+            fill={timerTrackColor} stroke={timerTrackColor} strokeWidth={2}
           />
         ))}
 
-        {/* ── Status label ── */}
+        {/* ── Animated F1 car ── */}
+        {showCar && (
+          <g transform={`translate(${carX},${carY}) rotate(${carRot})`}>
+            {/* Outer glow halo */}
+            <circle r={18} fill={ringColor} opacity={0.12}
+              style={{ filter: 'blur(8px)' }}
+            />
+            {/* Car */}
+            <F1Car color={ringColor} isPitStop={status === 'paused'} />
+
+            {/* Paused: amber warning ring */}
+            {status === 'paused' && (
+              <circle r={24} fill="none"
+                stroke="#f59e0b" strokeWidth={2}
+                opacity={0.7}
+                className="animate-ring-pulse"
+              />
+            )}
+          </g>
+        )}
+
+        {/* ── Centre text ── */}
         <text x={CX} y={CY - 26} textAnchor="middle"
           fill={ringColor} fontSize="9" fontWeight="700"
           fontFamily="Inter,system-ui,sans-serif" letterSpacing="2.5">
           {STATUS_LABELS[status]}
         </text>
 
-        {/* ── Main time ── */}
         <text x={CX} y={CY + 8} textAnchor="middle"
           fill={timerTextColor}
-          fontSize={displaySecs >= 3600 ? '28' : '34'}
+          fontSize={displaySecs >= 3600 ? '30' : '36'}
           fontWeight="800"
           fontFamily="'JetBrains Mono','Courier New',monospace">
           {formatSeconds(Math.max(Math.ceil(displaySecs), 0))}
         </text>
 
-        {/* ── Sub-label ── */}
-        <text x={CX} y={CY + 26} textAnchor="middle"
+        <text x={CX} y={CY + 27} textAnchor="middle"
           fill={dimText} fontSize="9"
           fontFamily="Inter,system-ui,sans-serif">
           {isBreak
@@ -157,15 +284,13 @@ export function F1TimerDisplay({
             : formatSeconds(Math.floor(elapsedFocusSecs)) + ' elapsed'}
         </text>
 
-        {/* ── Bottom decorative label ── */}
-        <text x={CX} y={207} textAnchor="middle"
+        <text x={CX} y={222} textAnchor="middle"
           fill={faintText} fontSize="8" fontWeight="600"
           fontFamily="Inter,system-ui,sans-serif" letterSpacing="4">
           LAP TIMER
         </text>
       </svg>
 
-      {/* Progress % */}
       {status !== 'idle' && (
         <div className="text-sm font-bold tracking-widest" style={{ color: ringColor }}>
           {Math.round(displayPct * 100)}%

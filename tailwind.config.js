@@ -35,6 +35,12 @@ export default {
         'slide-from-right':  'slideFromRight 0.35s ease-out',
         'slide-from-left':   'slideFromLeft 0.35s ease-out',
         'float':             'float 3s ease-in-out infinite',
+        // Timer actor animations
+        'pit-stop':          'pitStop 0.7s ease-in-out infinite',
+        'car-appear':        'carAppear 0.4s cubic-bezier(0.34,1.56,0.64,1)',
+        'ball-appear':       'ballAppear 0.4s cubic-bezier(0.34,1.56,0.64,1)',
+        'half-time':         'halfTime 1s ease-in-out infinite',
+        'ring-pulse':        'ringPulse 2s ease-in-out infinite',
       },
       keyframes: {
         fadeIn: {
@@ -60,6 +66,31 @@ export default {
         float: {
           '0%, 100%': { transform: 'translateY(0px)' },
           '50%':      { transform: 'translateY(-8px)' },
+        },
+        // ── Car & ball actor keyframes ──────────────────────────────────────
+        pitStop: {
+          '0%':   { transform: 'scale(1)   rotate(0deg)' },
+          '15%':  { transform: 'scale(1.2) rotate(-8deg)' },
+          '35%':  { transform: 'scale(0.9) rotate(6deg)' },
+          '55%':  { transform: 'scale(1.1) rotate(-4deg)' },
+          '75%':  { transform: 'scale(0.95) rotate(2deg)' },
+          '100%': { transform: 'scale(1)   rotate(0deg)' },
+        },
+        carAppear: {
+          '0%':   { opacity: '0', transform: 'scale(0)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        },
+        ballAppear: {
+          '0%':   { opacity: '0', transform: 'scale(0)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        },
+        halfTime: {
+          '0%, 100%': { transform: 'scale(1)',    opacity: '1' },
+          '50%':      { transform: 'scale(1.15)', opacity: '0.7' },
+        },
+        ringPulse: {
+          '0%, 100%': { opacity: '0.3' },
+          '50%':      { opacity: '0.7' },
         },
       },
       boxShadow: {
