@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
-  <rect width="512" height="512" rx="100" fill="#6366f1"/>
-  <circle cx="256" cy="256" r="160" stroke="white" stroke-width="16" fill="none" opacity="0.3"/>
-  <circle cx="256" cy="256" r="160" stroke="white" stroke-width="16" stroke-dasharray="640 368" stroke-linecap="round" fill="none" transform="rotate(-90 256 256)"/>
-  <text x="256" y="276" text-anchor="middle" font-family="Inter, sans-serif" font-size="96" font-weight="700" fill="white">F</text>
-</svg>

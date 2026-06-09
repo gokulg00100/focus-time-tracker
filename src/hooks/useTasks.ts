@@ -1,11 +1,13 @@
 import { useState, useEffect, useCallback } from 'react'
 import { getAllTasks, saveTask, deleteTask } from '../services/db'
+import { useAuthStore } from '../store/authStore'
 import type { Task } from '../types'
 import { v4 as uuidv4 } from 'uuid'
 
 export function useTasks() {
   const [tasks, setTasks] = useState<Task[]>([])
   const [loading, setLoading] = useState(true)
+  const uid = useAuthStore((s) => s.user?.uid)
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -17,9 +19,10 @@ export function useTasks() {
     }
   }, [])
 
+  // Reload whenever the logged-in user changes
   useEffect(() => {
     load()
-  }, [load])
+  }, [load, uid])
 
   const createTask = useCallback(
     async (title: string, description = '', color = '#6366f1') => {

@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import type { UserSettings, BreakConfig, Goals } from '../types'
+import type { UserSettings, BreakConfig, Goals, AccentTheme } from '../types'
 
 const DEFAULT_SETTINGS: UserSettings = {
   breakConfig: {
@@ -14,6 +14,7 @@ const DEFAULT_SETTINGS: UserSettings = {
     monthlyMins: 2400,
   },
   theme: 'system',
+  accentTheme: 'classic',
   notificationsEnabled: true,
   soundEnabled: true,
 }
@@ -23,6 +24,7 @@ interface SettingsState {
   updateBreakConfig: (config: BreakConfig | null) => void
   updateGoals: (goals: Goals) => void
   updateTheme: (theme: UserSettings['theme']) => void
+  updateAccentTheme: (accentTheme: AccentTheme) => void
   updateNotifications: (enabled: boolean) => void
   updateSound: (enabled: boolean) => void
   resetSettings: () => void
@@ -38,6 +40,8 @@ export const useSettingsStore = create<SettingsState>()(
         set((s) => ({ settings: { ...s.settings, goals } })),
       updateTheme: (theme) =>
         set((s) => ({ settings: { ...s.settings, theme } })),
+      updateAccentTheme: (accentTheme) =>
+        set((s) => ({ settings: { ...s.settings, accentTheme } })),
       updateNotifications: (enabled) =>
         set((s) => ({ settings: { ...s.settings, notificationsEnabled: enabled } })),
       updateSound: (enabled) =>

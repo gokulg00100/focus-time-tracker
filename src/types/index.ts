@@ -44,10 +44,13 @@ export interface Goals {
   monthlyMins: number
 }
 
+export type AccentTheme = 'classic' | 'f1' | 'fifa'
+
 export interface UserSettings {
   breakConfig: BreakConfig | null
   goals: Goals
   theme: 'light' | 'dark' | 'system'
+  accentTheme: AccentTheme
   notificationsEnabled: boolean
   soundEnabled: boolean
 }

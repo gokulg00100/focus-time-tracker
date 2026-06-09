@@ -17,11 +17,23 @@ interface FocusTrackerDB extends DBSchema {
   }
 }
 
-let db: IDBPDatabase<FocusTrackerDB> | null = null
+// Per-user DB namespacing —————————————————————————————————————————
+// Each user (Google or anonymous) gets their own IndexedDB.
+// Calling setDbUserId() is all that's needed when auth state changes.
+
+let currentUserId = 'local'
+const dbCache = new Map<string, IDBPDatabase<FocusTrackerDB>>()
+
+/** Called by authStore whenever the Firebase user changes. */
+export function setDbUserId(userId: string): void {
+  currentUserId = userId
+}
 
 async function getDB(): Promise<IDBPDatabase<FocusTrackerDB>> {
-  if (db) return db
-  db = await openDB<FocusTrackerDB>('focus-tracker', 1, {
+  const key = currentUserId
+  if (dbCache.has(key)) return dbCache.get(key)!
+
+  const db = await openDB<FocusTrackerDB>(`focus-tracker-${key}`, 1, {
     upgrade(database) {
       const sessionStore = database.createObjectStore('sessions', { keyPath: 'id' })
       sessionStore.createIndex('by-date', 'date')
@@ -29,6 +41,7 @@ async function getDB(): Promise<IDBPDatabase<FocusTrackerDB>> {
       database.createObjectStore('settings', { keyPath: 'key' })
     },
   })
+  dbCache.set(key, db)
   return db
 }
 

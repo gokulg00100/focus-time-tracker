@@ -11,14 +11,21 @@ import { useTasks } from '../hooks/useTasks'
 import { requestNotificationPermission } from '../services/notifications'
 import { exportSessionsToCSV, exportToJSON, parseImportFile } from '../services/export'
 import { importData } from '../services/db'
+import type { AccentTheme } from '../types'
 import {
-  Bell, Download, Upload, Trash2, Moon, Coffee, Target,
-  Shield, CheckCircle, AlertCircle
+  Bell, Download, Upload, Trash2, Moon, Target,
+  Shield, CheckCircle, AlertCircle, Check
 } from 'lucide-react'
 import { clsx } from 'clsx'
 
+const ACCENT_THEMES: { id: AccentTheme; name: string; emoji: string; color: string }[] = [
+  { id: 'classic', name: 'Classic',   emoji: '⚡', color: '#6366f1' },
+  { id: 'f1',      name: 'F1 Racing', emoji: '🏎️', color: '#e10600' },
+  { id: 'fifa',    name: 'World Cup', emoji: '⚽', color: '#22c55e' },
+]
+
 export function SettingsPage() {
-  const { settings, updateGoals, updateNotifications, updateSound, resetSettings } = useSettingsStore()
+  const { settings, updateGoals, updateNotifications, updateSound, updateAccentTheme, resetSettings } = useSettingsStore()
   const { sessions, reload: reloadSessions } = useSessions()
   const { tasks } = useTasks()
   const [importStatus, setImportStatus] = useState<'idle' | 'success' | 'error'>('idle')
@@ -80,12 +87,47 @@ export function SettingsPage() {
               <h3 className="font-semibold text-slate-900 dark:text-white">Appearance</h3>
             </div>
           </div>
-          <div className="flex items-center justify-between">
+
+          {/* Light / dark */}
+          <div className="flex items-center justify-between mb-5">
             <div>
-              <p className="text-sm font-medium text-slate-700 dark:text-slate-300">Theme</p>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Choose light, dark, or follow system</p>
+              <p className="text-sm font-medium text-slate-700 dark:text-slate-300">Colour mode</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Light, dark, or follow system</p>
             </div>
             <ThemeToggle />
+          </div>
+
+          {/* Accent theme */}
+          <div>
+            <p className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Accent theme</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mb-3">Changes the primary colour across the whole app</p>
+            <div className="flex gap-3">
+              {ACCENT_THEMES.map(({ id, name, emoji, color }) => {
+                const isActive = (settings.accentTheme ?? 'classic') === id
+                return (
+                  <button
+                    key={id}
+                    onClick={() => updateAccentTheme(id)}
+                    title={name}
+                    className={clsx(
+                      'flex flex-col items-center gap-1.5 px-3 py-2.5 rounded-xl border text-xs font-medium transition-all',
+                      isActive
+                        ? 'border-primary-500 bg-primary-500/10 text-primary-500'
+                        : 'border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-600'
+                    )}
+                  >
+                    <span className="flex items-center gap-1.5">
+                      <span
+                        className="inline-block w-3 h-3 rounded-full flex-shrink-0"
+                        style={{ backgroundColor: color }}
+                      />
+                      {emoji} {name}
+                    </span>
+                    {isActive && <Check size={10} className="text-primary-500" />}
+                  </button>
+                )
+              })}
+            </div>
           </div>
         </Card>
 
