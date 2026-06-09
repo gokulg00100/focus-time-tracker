@@ -17,6 +17,7 @@ const DEFAULT_SETTINGS: UserSettings = {
   accentTheme: 'classic',
   notificationsEnabled: true,
   soundEnabled: true,
+  ambientSoundEnabled: false,
 }
 
 interface SettingsState {
@@ -27,6 +28,7 @@ interface SettingsState {
   updateAccentTheme: (accentTheme: AccentTheme) => void
   updateNotifications: (enabled: boolean) => void
   updateSound: (enabled: boolean) => void
+  updateAmbientSound: (enabled: boolean) => void
   resetSettings: () => void
 }
 
@@ -46,6 +48,8 @@ export const useSettingsStore = create<SettingsState>()(
         set((s) => ({ settings: { ...s.settings, notificationsEnabled: enabled } })),
       updateSound: (enabled) =>
         set((s) => ({ settings: { ...s.settings, soundEnabled: enabled } })),
+      updateAmbientSound: (enabled) =>
+        set((s) => ({ settings: { ...s.settings, ambientSoundEnabled: enabled } })),
       resetSettings: () => set({ settings: DEFAULT_SETTINGS }),
     }),
     { name: 'focus-tracker-settings' }

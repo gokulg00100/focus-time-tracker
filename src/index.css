@@ -10,7 +10,9 @@
   }
 
   body {
-    @apply bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100;
+    /* Fallback only — useTheme sets the full theme background via JS */
+    background: #f8fafc;
+    @apply text-slate-900 dark:text-slate-100;
     margin: 0;
     padding: 0;
   }

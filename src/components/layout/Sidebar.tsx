@@ -8,6 +8,7 @@ import {
   CheckSquare,
   Settings,
   Zap,
+  Palette,
 } from 'lucide-react'
 import { clsx } from 'clsx'
 
@@ -18,7 +19,8 @@ const nav = [
   { to: '/analytics', icon: TrendingUp, label: 'Analytics' },
   { to: '/calendar', icon: Calendar, label: 'Calendar' },
   { to: '/tasks', icon: CheckSquare, label: 'Tasks' },
-  { to: '/settings', icon: Settings, label: 'Settings' },
+  { to: '/settings',       icon: Settings, label: 'Settings' },
+  { to: '/theme-settings', icon: Palette,  label: 'Themes'   },
 ]
 
 export function Sidebar() {

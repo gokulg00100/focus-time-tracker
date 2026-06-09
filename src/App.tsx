@@ -9,7 +9,8 @@ import { StatisticsPage }  from './pages/StatisticsPage'
 import { AnalyticsPage }   from './pages/AnalyticsPage'
 import { CalendarPage }    from './pages/CalendarPage'
 import { TasksPage }       from './pages/TasksPage'
-import { SettingsPage }    from './pages/SettingsPage'
+import { SettingsPage }       from './pages/SettingsPage'
+import { ThemeSettingsPage } from './pages/ThemeSettingsPage'
 import { useTheme }        from './hooks/useTheme'
 import { useAuthStore, initAuthListener } from './store/authStore'
 import { hasCompletedOnboarding, markOnboardingComplete } from './store/onboardingStore'
@@ -82,7 +83,8 @@ function AuthGate() {
         <Route path="/analytics"  element={<AnalyticsPage />}  />
         <Route path="/calendar"   element={<CalendarPage />}   />
         <Route path="/tasks"      element={<TasksPage />}      />
-        <Route path="/settings"   element={<SettingsPage />}   />
+        <Route path="/settings"       element={<SettingsPage />}       />
+        <Route path="/theme-settings" element={<ThemeSettingsPage />} />
       </Routes>
     </Layout>
   )

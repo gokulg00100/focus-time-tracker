@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Header } from '../components/layout/Header'
-import { TimerDisplay } from '../components/timer/TimerDisplay'
+import { ThemeTimerDisplay } from '../components/timer/ThemeTimerDisplay'
 import { TimerControls } from '../components/timer/TimerControls'
 import { DurationPicker } from '../components/timer/DurationPicker'
 import { BreakOverlay } from '../components/timer/BreakOverlay'
@@ -10,6 +10,9 @@ import { useTimer } from '../hooks/useTimer'
 import { useKeyboardShortcuts } from '../hooks/useKeyboardShortcuts'
 import { useTasks } from '../hooks/useTasks'
 import { useSettingsStore } from '../store/settingsStore'
+import { useAmbientSound } from '../hooks/useAmbientSound'
+import { useTheme } from '../hooks/useTheme'
+import { THEMES } from '../config/themes'
 import { formatDuration } from '../utils/time'
 import { Clock, Coffee, Target, ChevronDown } from 'lucide-react'
 import { clsx } from 'clsx'
@@ -18,7 +21,16 @@ export function TimerPage() {
   const timer = useTimer()
   const { tasks } = useTasks()
   const { settings } = useSettingsStore()
+  const { accentTheme } = useTheme()
   const [showBreakConfig, setShowBreakConfig] = useState(false)
+
+  // Ambient sound — plays only while the focus timer is running
+  const themeDef = THEMES[accentTheme]
+  useAmbientSound({
+    synthType:    themeDef.sound.synthType,
+    enabled:      settings.ambientSoundEnabled ?? false,
+    timerRunning: timer.status === 'running',
+  })
 
   const canEdit = timer.status === 'idle' || timer.status === 'completed'
 
@@ -52,7 +64,7 @@ export function TimerPage() {
             onExtend={timer.handleExtendBreak}
           />
         ) : (
-          <TimerDisplay
+          <ThemeTimerDisplay
             status={timer.status}
             remainingFocusSecs={timer.remainingFocusSecs}
             elapsedFocusSecs={timer.elapsedFocusSecs}
@@ -60,6 +72,7 @@ export function TimerPage() {
             breakRemaining={timer.breakRemaining}
             breakProgress={timer.breakProgress}
             plannedDurationSecs={timer.plannedDurationSecs}
+            accentTheme={accentTheme}
           />
         )}
 

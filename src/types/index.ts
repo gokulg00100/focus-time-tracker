@@ -53,6 +53,7 @@ export interface UserSettings {
   accentTheme: AccentTheme
   notificationsEnabled: boolean
   soundEnabled: boolean
+  ambientSoundEnabled: boolean
 }
 
 export interface DailyData {
