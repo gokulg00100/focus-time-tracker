@@ -141,3 +141,62 @@
   backdrop-filter: saturate(180%) blur(20px);
   -webkit-backdrop-filter: saturate(180%) blur(20px);
 }
+
+/* ── Onboarding: typewriter cursor ───────────────────────────────────────
+   Applied as a class on the blinking insertion-point span.               */
+@keyframes cursorBlink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+.cursor-blink {
+  animation: cursorBlink 0.75s step-end infinite;
+}
+
+/* ── Onboarding: mini ring animations (ThemesScreen preview cards) ───────
+   Each theme card shows a tiny looping progress-ring animation.
+   Circumferences:
+     Classic  r=24  → C ≈ 150.8
+     F1       r=22  → 270° arc length ≈ 103.6  (gap = 34.6)
+     FIFA     outer r=26 → C ≈ 163.4
+             inner  r=17 → C ≈ 106.8               */
+@keyframes miniRingFill {
+  0%   { stroke-dashoffset: 148; }
+  70%  { stroke-dashoffset: 18;  }
+  100% { stroke-dashoffset: 148; }
+}
+@keyframes miniSpeedFill {
+  /* Speedometer: 270° arc of length 103.6; empty = 103, full ≈ 10 */
+  0%   { stroke-dashoffset: 103; }
+  70%  { stroke-dashoffset: 10;  }
+  100% { stroke-dashoffset: 103; }
+}
+@keyframes miniFifaOuter {
+  0%   { stroke-dashoffset: 160; }
+  70%  { stroke-dashoffset: 18;  }
+  100% { stroke-dashoffset: 160; }
+}
+@keyframes miniFifaInner {
+  0%,  15% { stroke-dashoffset: 104; }
+  75%      { stroke-dashoffset: 12;  }
+  95%      { stroke-dashoffset: 104; }
+  100%     { stroke-dashoffset: 104; }
+}
+.mini-ring-classic    { animation: miniRingFill   3.8s ease-in-out 0.20s  infinite; }
+.mini-ring-f1         { animation: miniSpeedFill  3.8s ease-in-out 0.00s  infinite; }
+.mini-ring-fifa-outer { animation: miniFifaOuter  4.2s ease-in-out 0.10s  infinite; }
+.mini-ring-fifa-inner { animation: miniFifaInner  4.2s ease-in-out 0.90s  infinite; }
+
+/* ── Onboarding: launch-screen confetti particles ───────────────────────
+   Particles float upward and fade out, then loop.                        */
+@keyframes confettiFloat {
+  0%   { transform: translateY(0px)   rotate(0deg)   scale(1);   opacity: 0.85; }
+  80%  { opacity: 0.35; }
+  100% { transform: translateY(-70px) rotate(400deg) scale(0.5); opacity: 0; }
+}
+
+/* ── Onboarding: staggered slide-up for feature cards ───────────────────
+   Re-uses the existing slideUp keyframe; this alias just names the
+   intent for onboarding screens.                                         */
+.ob-card-enter {
+  animation: slideUp 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
