@@ -1,5 +1,6 @@
 import { useAuthStore } from '../../store/authStore'
-import { Timer, Zap, BarChart2, Target, Flame, UserCircle2 } from 'lucide-react'
+import { Timer, BarChart2, Target, Flame, UserCircle2 } from 'lucide-react'
+import { AppLogo } from '../ui/AppLogo'
 import { clsx } from 'clsx'
 
 // Google G icon as inline SVG (no external dependency needed)
@@ -42,7 +43,7 @@ export function AuthPage() {
         {/* Logo */}
         <div className="flex flex-col items-center gap-3 mb-8">
           <div className="flex items-center justify-center w-16 h-16 bg-primary-500 rounded-2xl shadow-glow-lg">
-            <Zap size={30} className="text-white" />
+            <AppLogo size={36} variant="white" id="auth" />
           </div>
           <div className="text-center">
             <h1 className="text-3xl font-bold text-white tracking-tight">Focus Tracker</h1>

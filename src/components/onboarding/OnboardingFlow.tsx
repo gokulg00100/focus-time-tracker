@@ -14,7 +14,8 @@
  */
 
 import { useState } from 'react'
-import { ArrowLeft, ArrowRight, Zap } from 'lucide-react'
+import { ArrowLeft, ArrowRight } from 'lucide-react'
+import { AppLogo } from '../ui/AppLogo'
 import { WelcomeScreen }  from './screens/WelcomeScreen'
 import { FeaturesScreen } from './screens/FeaturesScreen'
 import { ThemesScreen }   from './screens/ThemesScreen'
@@ -100,7 +101,7 @@ export function OnboardingFlow({ onComplete }: Props) {
         {/* Mini logo */}
         <div className="flex items-center gap-2 flex-shrink-0">
           <div className="w-7 h-7 rounded-lg bg-primary-500 flex items-center justify-center shadow-sm">
-            <Zap size={14} className="text-white" />
+            <AppLogo size={16} variant="white" id="ob" />
           </div>
           <span className="text-sm font-bold text-slate-800 tracking-tight hidden sm:block">
             Focus Timer

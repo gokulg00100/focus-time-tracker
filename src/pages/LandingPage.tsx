@@ -19,7 +19,8 @@
  */
 
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { Zap, BarChart2, Target, Flame, ChevronDown, ArrowRight, Play, UserCircle2, Check } from 'lucide-react'
+import { BarChart2, Target, Flame, ChevronDown, ArrowRight, Play, UserCircle2, Check, Zap } from 'lucide-react'
+import { AppLogo } from '../components/ui/AppLogo'
 import { useAuthStore } from '../store/authStore'
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -585,7 +586,7 @@ export function LandingPage({ onGetStarted }: Props) {
         <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 bg-white/80 backdrop-blur-lg border-b border-slate-100">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-xl bg-indigo-500 flex items-center justify-center shadow-sm">
-              <Zap size={16} className="text-white" />
+              <AppLogo size={18} variant="white" id="nav" />
             </div>
             <span className="text-base font-bold text-slate-900 tracking-tight">Focus Timer</span>
           </div>
@@ -906,7 +907,7 @@ export function LandingPage({ onGetStarted }: Props) {
           <div className="relative z-10 max-w-2xl mx-auto text-center">
             <div className="w-16 h-16 rounded-2xl bg-indigo-500 flex items-center justify-center mx-auto mb-8 shadow-2xl"
               style={{ boxShadow: '0 0 40px rgba(99,102,241,0.4)' }}>
-              <Zap size={28} className="text-white" />
+              <AppLogo size={36} variant="white" id="cta" />
             </div>
 
             <h2 className="text-5xl sm:text-6xl font-black text-white mb-4 tracking-tight">
@@ -953,7 +954,7 @@ export function LandingPage({ onGetStarted }: Props) {
         <footer className="py-8 px-6 bg-slate-950 text-center">
           <div className="flex items-center justify-center gap-2 mb-3">
             <div className="w-6 h-6 rounded-lg bg-indigo-500 flex items-center justify-center">
-              <Zap size={12} className="text-white" />
+              <AppLogo size={14} variant="white" id="footer" />
             </div>
             <span className="text-sm font-semibold text-slate-400">Focus Timer</span>
           </div>

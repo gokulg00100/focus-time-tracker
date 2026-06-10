@@ -12,7 +12,8 @@
  */
 
 import { useState, useEffect } from 'react'
-import { Zap, Timer, BarChart3, Target, Flame } from 'lucide-react'
+import { Timer, BarChart3, Target, Flame } from 'lucide-react'
+import { AppLogo } from '../../ui/AppLogo'
 
 // ── Typewriter hook ───────────────────────────────────────────────────────────
 
@@ -97,7 +98,7 @@ export function WelcomeScreen() {
           className="w-20 h-20 rounded-2xl flex items-center justify-center shadow-glow animate-float"
           style={{ backgroundColor: 'rgb(var(--p-500))' }}
         >
-          <Zap size={36} className="text-white" />
+          <AppLogo size={40} variant="white" id="welcome" />
         </div>
         {/* Slow pulse ring */}
         <div

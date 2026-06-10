@@ -12,8 +12,9 @@
 import { NavLink }   from 'react-router-dom'
 import {
   Timer, LayoutDashboard, BarChart2, TrendingUp,
-  Calendar, CheckSquare, Settings, Zap, Palette,
+  Calendar, CheckSquare, Settings, Palette,
 } from 'lucide-react'
+import { AppLogo } from '../ui/AppLogo'
 import { clsx }     from 'clsx'
 
 const NAV = [
@@ -45,7 +46,7 @@ export function Sidebar() {
       <div className="flex items-center gap-3 px-2 mb-8">
         <div className="relative flex-shrink-0">
           <div className="flex items-center justify-center w-10 h-10 bg-primary-500 rounded-xl shadow-glow">
-            <Zap size={20} className="text-white" />
+            <AppLogo size={22} variant="white" id="sidebar" />
           </div>
           {/* Glow pulse ring */}
           <div className="absolute inset-0 rounded-xl bg-primary-500 opacity-20 animate-ping [animation-duration:3s]"/>
