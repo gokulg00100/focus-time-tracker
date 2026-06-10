@@ -919,9 +919,9 @@ export function LandingPage({ onGetStarted }: Props) {
 
             {/* Feature bullets */}
             <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 mb-12">
-              {['Free forever', 'Works offline', 'No ads', 'Privacy-first'].map((f) => (
+              {['Free forever', 'No ads', 'Privacy-first'].map((f) => (
                 <div key={f} className="flex items-center gap-2 text-sm text-slate-300">
-                  <Check size={14} className="text-indigo-400" />
+                  <Check size={14} className="text-white" />
                   {f}
                 </div>
               ))}
