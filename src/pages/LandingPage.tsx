@@ -128,13 +128,13 @@ function HeroTimer({ mouseX, mouseY }: { mouseX: number; mouseY: number }) {
     >
       {/* Outer glow */}
       <div className="absolute inset-0 rounded-full"
-        style={{ background: 'radial-gradient(circle, rgba(0,113,227,0.15) 0%, transparent 70%)' }} />
+        style={{ background: 'radial-gradient(circle, rgba(99,102,241,0.15) 0%, transparent 70%)' }} />
 
       <svg viewBox="0 0 280 280" width={280} height={280} aria-hidden>
         <defs>
           <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#0071e3" />
-            <stop offset="100%" stopColor="#1a8af5" />
+            <stop offset="0%" stopColor="#6366f1" />
+            <stop offset="100%" stopColor="#8b5cf6" />
           </linearGradient>
           <filter id="glow">
             <feGaussianBlur stdDeviation="4" result="blur" />
@@ -160,7 +160,7 @@ function HeroTimer({ mouseX, mouseY }: { mouseX: number; mouseY: number }) {
         <circle cx={140} cy={140} r={92} fill="white" opacity={0.9} />
 
         {/* Status */}
-        <text x={140} y={118} textAnchor="middle" fill="#0071e3"
+        <text x={140} y={118} textAnchor="middle" fill="#6366f1"
           fontSize="11" fontWeight="700" fontFamily="Inter,sans-serif" letterSpacing="3">
           FOCUS SESSION
         </text>
@@ -196,14 +196,14 @@ function HeroTimer({ mouseX, mouseY }: { mouseX: number; mouseY: number }) {
 /** Floating particle background */
 function FloatingParticles() {
   const particles = [
-    { x: '8%',  y: '20%', size: 6,  delay: 0,    color: '#0071e3' },
-    { x: '92%', y: '15%', size: 4,  delay: 1.2,  color: '#1a8af5' },
+    { x: '8%',  y: '20%', size: 6,  delay: 0,    color: '#6366f1' },
+    { x: '92%', y: '15%', size: 4,  delay: 1.2,  color: '#8b5cf6' },
     { x: '15%', y: '70%', size: 8,  delay: 0.7,  color: '#06b6d4' },
-    { x: '85%', y: '65%', size: 5,  delay: 2.1,  color: '#0071e3' },
-    { x: '50%', y: '8%',  size: 3,  delay: 1.8,  color: '#1a8af5' },
+    { x: '85%', y: '65%', size: 5,  delay: 2.1,  color: '#6366f1' },
+    { x: '50%', y: '8%',  size: 3,  delay: 1.8,  color: '#8b5cf6' },
     { x: '30%', y: '85%', size: 7,  delay: 0.4,  color: '#06b6d4' },
-    { x: '70%', y: '82%', size: 4,  delay: 1.5,  color: '#0071e3' },
-    { x: '5%',  y: '45%', size: 5,  delay: 2.5,  color: '#1a8af5' },
+    { x: '70%', y: '82%', size: 4,  delay: 1.5,  color: '#6366f1' },
+    { x: '5%',  y: '45%', size: 5,  delay: 2.5,  color: '#8b5cf6' },
     { x: '95%', y: '40%', size: 3,  delay: 0.9,  color: '#06b6d4' },
   ]
   return (
@@ -274,7 +274,7 @@ function MiniStreakRow() {
           <div className="w-8 h-8 rounded-xl flex items-center justify-center transition-all duration-500"
             style={{
               backgroundColor: done[i]
-                ? inView ? '#0071e3' : '#e2e8f0'
+                ? inView ? '#6366f1' : '#e2e8f0'
                 : '#f1f5f9',
               transitionDelay: `${i * 80}ms`,
             }}>
@@ -440,9 +440,8 @@ function AnimatedProgressChart() {
       <div className="flex items-end gap-3 h-28">
         {values.map((v, i) => (
           <div key={i} className="flex-1 flex flex-col items-center gap-1">
-            <div className="w-full rounded-t-lg transition-all duration-700"
+            <div className="w-full rounded-t-lg transition-all duration-700 bg-gradient-to-t from-indigo-500 to-violet-400"
               style={{
-                background: 'linear-gradient(to top, #0071e3, #1a8af5)',
                 height: inView ? `${(v / 100) * 100}%` : '4px',
                 transitionDelay: `${i * 80}ms`,
               }}
@@ -523,7 +522,7 @@ export function LandingPage({ onGetStarted }: Props) {
       id: 'classic', name: 'Classic', emoji: '⚡',
       tagline: 'Clean and distraction-free.',
       desc:    'Minimal indigo design that eliminates distractions. Pure focus, beautiful simplicity.',
-      accent:  '#0071e3',
+      accent:  '#6366f1',
       bg:      'linear-gradient(135deg, #1e1b4b 0%, #312e81 100%)',
       darkBg:  'linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%)',
     },
@@ -547,9 +546,9 @@ export function LandingPage({ onGetStarted }: Props) {
 
   const BENEFITS = [
     { icon: <Flame size={22} className="text-orange-500" />, title: 'Build Better Habits', desc: 'Daily streaks and consistency scoring keep you accountable long-term.' },
-    { icon: <BarChart2 size={22} className="text-[#0071e3]" />, title: 'Track Real Progress', desc: 'Detailed analytics show exactly how your focus habits are evolving.' },
+    { icon: <BarChart2 size={22} className="text-indigo-500" />, title: 'Track Real Progress', desc: 'Detailed analytics show exactly how your focus habits are evolving.' },
     { icon: <Target size={22} className="text-emerald-500" />, title: 'Stay Motivated', desc: 'Theme-aware celebrations reward every completed session with flair.' },
-    { icon: <Zap size={22} className="text-[#0071e3]" />, title: 'Focus Longer', desc: 'Smart break scheduling based on Pomodoro and Ultradian rhythm science.' },
+    { icon: <Zap size={22} className="text-violet-500" />, title: 'Focus Longer', desc: 'Smart break scheduling based on Pomodoro and Ultradian rhythm science.' },
   ]
 
   return (
@@ -585,14 +584,14 @@ export function LandingPage({ onGetStarted }: Props) {
         {/* ── Nav bar ──────────────────────────────────────────────────── */}
         <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 bg-white/80 backdrop-blur-lg border-b border-slate-100">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-[#0071e3] flex items-center justify-center shadow-sm">
+            <div className="w-8 h-8 rounded-xl bg-indigo-500 flex items-center justify-center shadow-sm">
               <Zap size={16} className="text-white" />
             </div>
             <span className="text-base font-bold text-slate-900 tracking-tight">Focus Timer</span>
           </div>
           <button
             onClick={onGetStarted}
-            className="flex items-center gap-1.5 bg-[#0071e3] text-white text-sm font-semibold px-4 py-2 rounded-xl hover:bg-[#0058b0] transition-colors shadow-sm"
+            className="flex items-center gap-1.5 bg-indigo-500 text-white text-sm font-semibold px-4 py-2 rounded-xl hover:bg-indigo-600 transition-colors shadow-sm"
           >
             Get Started <ArrowRight size={14} />
           </button>
@@ -620,22 +619,22 @@ export function LandingPage({ onGetStarted }: Props) {
             {/* Left — copy */}
             <div className="flex-1 text-center lg:text-left landing-fade-in">
               {/* Badge */}
-              <div className="inline-flex items-center gap-2 bg-[#e8f4fd] text-[#0071e3] text-xs font-semibold px-3 py-1.5 rounded-full mb-6 border border-[#c9e3fa]">
-                <div className="w-1.5 h-1.5 rounded-full bg-[#0071e3]" />
+              <div className="inline-flex items-center gap-2 bg-indigo-50 text-indigo-600 text-xs font-semibold px-3 py-1.5 rounded-full mb-6 border border-indigo-100">
+                <div className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
                 Premium Focus Experience
               </div>
 
               <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black text-slate-900 tracking-tight leading-[1.05] mb-6">
                 Master Your<br />
-                <span style={{ background: 'linear-gradient(90deg, #0071e3, #1a8af5)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+                <span className="bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-600 bg-clip-text text-transparent">
                   Focus.
                 </span>
               </h1>
 
               {/* Typewriter tagline */}
               <div className="text-2xl sm:text-3xl font-bold text-slate-600 mb-8 h-10 flex items-center justify-center lg:justify-start gap-0">
-                <span className="text-[#0071e3]">{tagline}</span>
-                <span className="cursor-blink ml-0.5 inline-block w-0.5 h-7 bg-[#1a8af5] rounded-full" />
+                <span className="text-indigo-500">{tagline}</span>
+                <span className="cursor-blink ml-0.5 inline-block w-0.5 h-7 bg-indigo-400 rounded-full" />
               </div>
 
               <p className="text-lg text-slate-500 leading-relaxed mb-10 max-w-lg mx-auto lg:mx-0">
@@ -645,7 +644,7 @@ export function LandingPage({ onGetStarted }: Props) {
               <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
                 <button
                   onClick={onGetStarted}
-                  className="group flex items-center justify-center gap-2 bg-[#0071e3] text-white font-semibold px-7 py-4 rounded-2xl text-base hover:bg-[#0058b0] transition-all shadow-lg hover:shadow-[#a8d4f5] hover:shadow-2xl hover:-translate-y-0.5 active:translate-y-0"
+                  className="group flex items-center justify-center gap-2 bg-indigo-500 text-white font-semibold px-7 py-4 rounded-2xl text-base hover:bg-indigo-600 transition-all shadow-lg hover:shadow-indigo-200 hover:shadow-2xl hover:-translate-y-0.5 active:translate-y-0"
                 >
                   Get Started
                   <ArrowRight size={18} className="group-hover:translate-x-0.5 transition-transform" />
@@ -679,16 +678,16 @@ export function LandingPage({ onGetStarted }: Props) {
         <section className="py-24 px-6 bg-white">
           <div className="max-w-5xl mx-auto">
             <div className="text-center mb-16">
-              <p className="text-[#0071e3] text-sm font-semibold uppercase tracking-widest mb-3">Live Preview</p>
+              <p className="text-indigo-500 text-sm font-semibold uppercase tracking-widest mb-3">Live Preview</p>
               <h2 className="text-4xl sm:text-5xl font-black text-slate-900 mb-4">Everything you need<br/>to stay in flow.</h2>
               <p className="text-lg text-slate-500 max-w-xl mx-auto">Powerful analytics, streak tracking, and progress insights — all in one beautiful app.</p>
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-              <StatPreviewCard label="Today's Focus" value="4h 20m" sub="↑ 32% vs yesterday" color="#0071e3" delay="0ms" />
+              <StatPreviewCard label="Today's Focus" value="4h 20m" sub="↑ 32% vs yesterday" color="#6366f1" delay="0ms" />
               <StatPreviewCard label="Current Streak" value="7 days" sub="Personal best!" color="#f59e0b" delay="80ms" />
               <StatPreviewCard label="This Month" value="89h" sub="Goal: 80h ✓" color="#10b981" delay="160ms" />
-              <StatPreviewCard label="Focus Score" value="94" sub="Top 5%" color="#1a8af5" delay="240ms" />
+              <StatPreviewCard label="Focus Score" value="94" sub="Top 5%" color="#8b5cf6" delay="240ms" />
             </div>
 
             <div className="grid md:grid-cols-2 gap-4">
@@ -701,7 +700,7 @@ export function LandingPage({ onGetStarted }: Props) {
                   </div>
                   <span className="text-xs font-semibold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full">+18%</span>
                 </div>
-                <MiniBarChart color="#0071e3" />
+                <MiniBarChart color="#6366f1" />
               </div>
 
               {/* Streak calendar */}
@@ -725,15 +724,15 @@ export function LandingPage({ onGetStarted }: Props) {
         <section id="how-it-works" className="py-24 px-6 bg-slate-50">
           <div className="max-w-5xl mx-auto">
             <div className="text-center mb-16">
-              <p className="text-[#0071e3] text-sm font-semibold uppercase tracking-widest mb-3">Simple & Powerful</p>
+              <p className="text-indigo-500 text-sm font-semibold uppercase tracking-widest mb-3">Simple & Powerful</p>
               <h2 className="text-4xl sm:text-5xl font-black text-slate-900 mb-4">How it works</h2>
               <p className="text-lg text-slate-500 max-w-xl mx-auto">Three pillars that turn daily sessions into long-term success.</p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-6">
               {[
-                { icon: '⏱', title: 'Focus Sessions', desc: 'Set custom durations from 5 minutes to 8 hours. Smart break scheduling keeps you fresh and productive throughout the day.', color: '#0071e3', delay: '0ms' },
-                { icon: '📈', title: 'Analytics', desc: 'Daily, weekly, monthly and yearly charts. Heatmaps, trend lines, and focus scores give you a complete picture of your habits.', color: '#1a8af5', delay: '120ms' },
+                { icon: '⏱', title: 'Focus Sessions', desc: 'Set custom durations from 5 minutes to 8 hours. Smart break scheduling keeps you fresh and productive throughout the day.', color: '#6366f1', delay: '0ms' },
+                { icon: '📈', title: 'Analytics', desc: 'Daily, weekly, monthly and yearly charts. Heatmaps, trend lines, and focus scores give you a complete picture of your habits.', color: '#8b5cf6', delay: '120ms' },
                 { icon: '🎯', title: 'Goals & Streaks', desc: 'Set daily focus goals and track streaks. The habit loop of goal → progress → celebration makes consistency natural.', color: '#06b6d4', delay: '240ms' },
               ].map(({ icon, title, desc, color, delay }) => {
                 const { ref, inView } = useInView()
@@ -781,8 +780,8 @@ export function LandingPage({ onGetStarted }: Props) {
             {/* Stats row */}
             <div className="grid grid-cols-3 gap-4 mt-6">
               {[
-                { v: '12+', l: 'Chart types', c: '#0071e3' },
-                { v: '365d', l: 'History tracked', c: '#1a8af5' },
+                { v: '12+', l: 'Chart types', c: '#6366f1' },
+                { v: '365d', l: 'History tracked', c: '#8b5cf6' },
                 { v: 'CSV', l: 'Export support', c: '#06b6d4' },
               ].map(({ v, l, c }) => {
                 const { ref, inView } = useInView()
@@ -804,7 +803,7 @@ export function LandingPage({ onGetStarted }: Props) {
         <section className="py-24 px-6 bg-slate-50">
           <div className="max-w-5xl mx-auto">
             <div className="text-center mb-16">
-              <p className="text-[#0071e3] text-sm font-semibold uppercase tracking-widest mb-3">3 Themes</p>
+              <p className="text-violet-500 text-sm font-semibold uppercase tracking-widest mb-3">3 Themes</p>
               <h2 className="text-4xl sm:text-5xl font-black text-slate-900 mb-4">Your timer,<br/>your personality.</h2>
               <p className="text-lg text-slate-500 max-w-xl mx-auto">Hover any card to see a live animated preview. Switch themes any time from Settings.</p>
             </div>
@@ -884,7 +883,7 @@ export function LandingPage({ onGetStarted }: Props) {
                 title="Classic"
                 icon="✓"
                 tagline="Session Complete"
-                color="#0071e3"
+                color="#6366f1"
                 bg="linear-gradient(135deg, #1e1b4b 0%, #312e81 100%)"
                 items={['Animated checkmark ring', 'Ripple ring effect', 'Elegant card reveal', 'Session stats card']}
                 delay="240ms"
@@ -905,7 +904,7 @@ export function LandingPage({ onGetStarted }: Props) {
             style={{ background: 'radial-gradient(circle, rgba(139,92,246,0.12) 0%, transparent 70%)' }} />
 
           <div className="relative z-10 max-w-2xl mx-auto text-center">
-            <div className="w-16 h-16 rounded-2xl bg-[#0071e3] flex items-center justify-center mx-auto mb-8 shadow-2xl"
+            <div className="w-16 h-16 rounded-2xl bg-indigo-500 flex items-center justify-center mx-auto mb-8 shadow-2xl"
               style={{ boxShadow: '0 0 40px rgba(99,102,241,0.4)' }}>
               <Zap size={28} className="text-white" />
             </div>
@@ -953,7 +952,7 @@ export function LandingPage({ onGetStarted }: Props) {
         {/* Footer */}
         <footer className="py-8 px-6 bg-slate-950 text-center">
           <div className="flex items-center justify-center gap-2 mb-3">
-            <div className="w-6 h-6 rounded-lg bg-[#0071e3] flex items-center justify-center">
+            <div className="w-6 h-6 rounded-lg bg-indigo-500 flex items-center justify-center">
               <Zap size={12} className="text-white" />
             </div>
             <span className="text-sm font-semibold text-slate-400">Focus Timer</span>
