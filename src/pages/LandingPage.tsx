@@ -656,20 +656,6 @@ export function LandingPage({ onGetStarted }: Props) {
                 </a>
               </div>
 
-              {/* Social proof */}
-              <div className="flex items-center gap-4 mt-8 justify-center lg:justify-start">
-                <div className="flex -space-x-2">
-                  {['#6366f1','#8b5cf6','#06b6d4','#10b981'].map((c, i) => (
-                    <div key={i} className="w-7 h-7 rounded-full border-2 border-white flex items-center justify-center text-[10px] font-bold text-white"
-                      style={{ backgroundColor: c }}>
-                      {['A','B','C','D'][i]}
-                    </div>
-                  ))}
-                </div>
-                <p className="text-sm text-slate-500">
-                  <span className="font-semibold text-slate-700">1,200+</span> sessions tracked today
-                </p>
-              </div>
             </div>
 
             {/* Right — animated timer */}
@@ -837,7 +823,7 @@ export function LandingPage({ onGetStarted }: Props) {
           <div className="max-w-5xl mx-auto">
             <div className="text-center mb-16">
               <p className="text-orange-500 text-sm font-semibold uppercase tracking-widest mb-3">Benefits</p>
-              <h2 className="text-4xl sm:text-5xl font-black text-slate-900 mb-4">Built for people<br/>who mean business.</h2>
+              <h2 className="text-4xl sm:text-5xl font-black text-slate-900 mb-4">Built for students<br/>and achievers.</h2>
             </div>
 
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
@@ -881,7 +867,7 @@ export function LandingPage({ onGetStarted }: Props) {
                 tagline="SESSION COMPLETE"
                 color="#e10600"
                 bg="linear-gradient(135deg, #0a0a0a 0%, #3b0000 100%)"
-                items={['Checkered flag sweep', 'Engine rev sound effect', 'Red & white confetti', 'Victory tagline']}
+                items={['Checkered flag sweep', 'Red & white confetti', 'Victory tagline', 'Session stats card']}
                 delay="0ms"
               />
               <CelebPreviewCard
@@ -890,7 +876,7 @@ export function LandingPage({ onGetStarted }: Props) {
                 tagline="GOAL!"
                 color="#22c55e"
                 bg="linear-gradient(135deg, #052e16 0%, #14532d 100%)"
-                items={['Goal flash animation', 'Crowd cheer sound', 'Player celebration', 'Green & gold confetti']}
+                items={['Goal flash animation', 'Player celebration', 'Green & gold confetti', 'Session stats card']}
                 delay="120ms"
               />
               <CelebPreviewCard
@@ -899,7 +885,7 @@ export function LandingPage({ onGetStarted }: Props) {
                 tagline="Session Complete"
                 color="#6366f1"
                 bg="linear-gradient(135deg, #1e1b4b 0%, #312e81 100%)"
-                items={['Animated checkmark ring', 'Ripple ring effect', 'Elegant card reveal', 'Soft chime sound']}
+                items={['Animated checkmark ring', 'Ripple ring effect', 'Elegant card reveal', 'Session stats card']}
                 delay="240ms"
               />
             </div>
@@ -960,10 +946,6 @@ export function LandingPage({ onGetStarted }: Props) {
               </button>
             </div>
 
-            <p className="text-xs text-slate-500 mt-6">
-              Guest data is stored locally on your device.<br/>
-              Sign in with Google to sync across devices.
-            </p>
           </div>
         </section>
 
