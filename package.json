@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "node scripts/gen-og.mjs && tsc && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -23,6 +23,7 @@
     "zustand": "^4.5.2"
   },
   "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2",
     "@types/react": "^18.2.79",
     "@types/react-dom": "^18.2.25",
     "@types/uuid": "^9.0.8",

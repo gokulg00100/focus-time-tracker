@@ -19,9 +19,9 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       manifest: {
-        name: 'Focus Time Tracker',
-        short_name: 'FocusTracker',
-        description: 'Track your focus sessions and improve productivity',
+        name: 'Focus Timer',
+        short_name: 'Focus Timer',
+        description: 'Build deep work habits with focus sessions, streaks, analytics, and theme-powered celebrations.',
         theme_color: '#6366f1',
         background_color: '#0f172a',
         display: 'standalone',
